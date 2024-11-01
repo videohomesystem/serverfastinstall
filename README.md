@@ -1,0 +1,2 @@
+# serverfastinstall
+Fast server configuration

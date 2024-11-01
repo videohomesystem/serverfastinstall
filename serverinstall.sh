@@ -27,6 +27,7 @@ for app in "${applications[@]}"
 do
     sudo apt install -y "$app"
 done
+printf "\033[93m Приложения установлены \033[0m"
 #============================================================================================================================
 echo "net.core.default_qdisc=fq" >> $sysctlc
 echo "net.ipv4.tcp_congestion_control=bbr" >> $sysctlc

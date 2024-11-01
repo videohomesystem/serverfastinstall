@@ -3,6 +3,7 @@ For fast start VPN server with 3x-ui, use this repo
  Скрипт создан для быстрой настройки сервера.
 # Installation | Установка
 
-1) выполнить bash <(curl -Ls https://github.com/videohomesystem/serverfastinstall/blob/main/serverinstall.sh)
-2) следовать советам установщика
-3) радоваться жизни
+1) выполнить
+   `bash <(curl -Ls https://github.com/videohomesystem/serverfastinstall/blob/main/serverinstall.sh)`
+) следовать советам установщика
+) радоваться жизни

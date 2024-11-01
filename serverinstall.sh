@@ -31,11 +31,11 @@ do
     sudo apt install -y "$app"
 done
 ###########################################################################################################################
-sysctlc=/etc/sysctl.conf
+sysctlc="/etc/sysctl.conf"
 echo "net.core.default_qdisc=fq" >> $sysctlc
 echo "net.ipv4.tcp_congestion_control=bbr" >> $sysctlc
 sysctl -p
-SYSRESULT=$(sysctl -a | grep congestion)
+SYSRESULT="$(sysctl -a | grep congestion)"
 printf "\033[93m Изменения в ядро $SYSRESULT внесены  \033[0m"
 ###########################################################################################################################
 #--- 3x UI

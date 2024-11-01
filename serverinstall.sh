@@ -24,7 +24,7 @@ apt update && apt upgrade -y # - индексирует содержимое р�
 printf "\033[93m Система обновлена \033[0m"
 #
 printf "\033[93m Выполняется установка приложений.. \033[0m"
-applications=(install apt-transport-https ca-certificates fail2ban mcedit) #------ Тут пишем аппсы, БЕЗ запятых, ТОЛЬКО с пробелами
+applications=(apt-transport-https ca-certificates fail2ban mcedit) #------ Тут пишем аппсы, БЕЗ запятых, ТОЛЬКО с пробелами
 #
 for app in "${applications[@]}"
 do

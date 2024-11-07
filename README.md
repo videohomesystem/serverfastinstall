@@ -9,7 +9,7 @@ Script created for fast install VPN's Debian based server
 1) Выполнить из под root
 `bash <(curl -Ls https://github.com/videohomesystem/serverfastinstall/blob/main/serverinstall.sh)`
 
-#ЕСЛИ НЕ СРАБОТАЛО? выполнить по очереди:
+# ЕСЛИ НЕ СРАБОТАЛО? выполнить по очереди:
 
 `wget https://raw.githubusercontent.com/videohomesystem/serverfastinstall/refs/heads/main/serverinstall.sh`
 
@@ -23,7 +23,7 @@ Script created for fast install VPN's Debian based server
 1) Run as root
 `bash <(curl -Ls https://github.com/videohomesystem/serverfastinstall/blob/main/serverinstall.sh)`
 
-#It's doesn't work?
+# It's doesn't work?
 Follow this commands
 
 `wget https://raw.githubusercontent.com/videohomesystem/serverfastinstall/refs/heads/main/serverinstall.sh`

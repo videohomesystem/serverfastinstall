@@ -12,6 +12,7 @@ Script created for fast install VPN's Debian based server
 ЕСЛИ НЕ СРАБОТАЛО? выполнить по очереди:
 
 `wget https://raw.githubusercontent.com/videohomesystem/serverfastinstall/refs/heads/main/serverinstall.sh`
+
 `bash serverinstall.sh`
 
 3) следовать советам установщика

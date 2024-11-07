@@ -1,6 +1,7 @@
 # Fast server Installation
 # DEBIAN 12 ONLY
-For fast start VPN server with 3x-ui, use this repo
+Script created for fast install VPN's Debian based server
+
 Скрипт создан для быстрой настройки сервера на базе 3x-ui.
  
 # Установка

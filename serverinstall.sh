@@ -31,8 +31,8 @@ printf "\033[93m Приложения установлены \033[0m"
 #============================================================================================================================
 echo "net.core.default_qdisc=fq" >> $sysctlc
 echo "net.ipv4.tcp_congestion_control=bbr" >> $sysctlc
-sysctl -p
-SYSRESULT="$(sysctl -a | grep congestion)"
+/usr/sbin/sysctl -p
+SYSRESULT="$(/usr/sbin/sysctl -a | grep congestion)"
 printf "\033[93m Изменения в ядро $SYSRESULT внесены  \033[0m"
 #============================================================================================================================
 printf "\033[93m Запуск очистки системы от старых пакетов... \033[0m"

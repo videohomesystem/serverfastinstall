@@ -31,9 +31,11 @@ printf "\033[93m Приложения установлены \033[0m"
 #============================================================================================================================
 echo "net.core.default_qdisc=fq" >> $sysctlc
 echo "net.ipv4.tcp_congestion_control=bbr" >> $sysctlc
-/usr/sbin/sysctl -p
-SYSRESULT="$(/usr/sbin/sysctl -a | grep congestion)"
-printf "\033[93m Изменения в ядро $SYSRESULT внесены  \033[0m"
+sysctl -p
+#SYSRESULT="$(/usr/sbin/sysctl -a | grep congestion)"
+#src: https://joyreactor.cc/post/5761728
+#/usr/sbin/sysctl -p - для дебиан 12 в варианте десктопа
+#printf "\033[93m Изменения в ядро $SYSRESULT внесены  \033[0m"
 #============================================================================================================================
 printf "\033[93m Запуск очистки системы от старых пакетов... \033[0m"
 apt autoremove -y #--- чистим старые пакеты автоудалятором

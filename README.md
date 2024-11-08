@@ -7,7 +7,7 @@ Script created for fast install VPN's Debian based server
 # Установка, этап 0
 
 1) Выполнить из под root
-`bash <(curl -Ls https://github.com/videohomesystem/serverfastinstall/blob/main/serverinstall.sh)`
+`bash <(curl -Ls https://raw.githubusercontent.com/videohomesystem/serverfastinstall/refs/heads/main/serverinstall.sh)`
 
 # ЕСЛИ НЕ СРАБОТАЛО? выполнить по очереди:
 
@@ -26,7 +26,7 @@ Script created for fast install VPN's Debian based server
 
 # Installation 
 1) Run as root
-`bash <(curl -Ls https://github.com/videohomesystem/serverfastinstall/blob/main/serverinstall.sh)`
+`bash <(curl -Ls https://raw.githubusercontent.com/videohomesystem/serverfastinstall/refs/heads/main/serverinstall.sh))`
 
 # It's doesn't work?
 Follow this commands

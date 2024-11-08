@@ -27,7 +27,7 @@ Script created for fast install VPN's Debian based server
 `bash <(curl -Ls https://raw.githubusercontent.com/videohomesystem/serverfastinstall/refs/heads/main/serverinstall.sh))`
 
 # It's doesn't work?
-Follow this commands
+Follow the commands
 
 `wget https://raw.githubusercontent.com/videohomesystem/serverfastinstall/refs/heads/main/serverinstall.sh`
 

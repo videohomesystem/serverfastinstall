@@ -28,6 +28,8 @@ echo -e "" > $srcl
 echo -e "\n# Основной репозиторий" >> $srcl
 echo "deb http://deb.debian.org/debian bookworm main non-free-firmware" >> $srcl
 apt update && apt install ca-certificates -y && apt install apt-transport-https -y
+# чистим файл вновь
+echo -e "" > $srcl 
 # Добавляем новые строки в файл
 echo -e "deb https://deb.debian.org/debian bookworm main non-free-firmware" >> $srcl
 echo -e "deb-src https://deb.debian.org/debian bookworm main non-free-firmware" >> $srcl

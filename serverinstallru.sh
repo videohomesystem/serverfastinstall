@@ -75,7 +75,7 @@ echo -e "ExecStart=/usr/local/bin/autostart.sh" >> $autoservc
 echo -e "[Install]" >> $autoservc
 echo -e "WantedBy=multi-user.target" >> $autoservc
 #============================================================================================================================
-#-- Создаем таймер, который будет запускать этот сервис раз в месяц, в 12 часов ночи
+#-- Создаем таймер, который будет запускать этот сервис раз в неделю, в 12 часов ночи
 touch $autotimer
 echo -e "[Timer]" >>
 echo -e "OnCalendar=Weekly" >> $autotimer

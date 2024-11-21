@@ -78,7 +78,7 @@ echo -e "WantedBy=multi-user.target" >> $autoservc
 #-- Создаем таймер, который будет запускать этот сервис раз в месяц, в 12 часов ночи
 touch $autotimer
 echo -e "[Timer]" >>
-echo -e "OnCaleendar=Weekly" >> $autotimer
+echo -e "OnCalendar=Weekly" >> $autotimer
 echo -e "Unit=AutoUpdate.service" >> $autotimer
 #----------------------------------------------------------------------------------------------------------------------------
 systemd-analyze verify /etc/systemd/system/AutoUpdate.timer

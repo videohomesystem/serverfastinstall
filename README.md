@@ -12,9 +12,7 @@ Script created for fast install VPN's Debian based server
 2) ставим и подключаемся по ssh (добью когда-нибудь)
 3) выполняем su - вводим пароль
 4) выполянем код:
-
-`wget https://raw.githubusercontent.com/videohomesystem/serverfastinstall/refs/heads/main/serverinstall.sh`
-
+`wget https://raw.githubusercontent.com/videohomesystem/serverfastinstall/refs/heads/main/serverinstallru.sh`
 `bash serverinstall.sh`
 
 3) Сложить лапки и ждать
@@ -24,13 +22,7 @@ Script created for fast install VPN's Debian based server
 
 # Installation 
 1) Run as root
-`bash <(curl -Ls https://raw.githubusercontent.com/videohomesystem/serverfastinstall/refs/heads/main/serverinstall.sh))`
-
-# It's doesn't work?
-Follow the commands
-
-`wget https://raw.githubusercontent.com/videohomesystem/serverfastinstall/refs/heads/main/serverinstall.sh`
-
+`wget https://raw.githubusercontent.com/videohomesystem/serverfastinstall/refs/heads/main/serverinstallru.sh`
 `bash serverinstall.sh`
 
 3) Keep installation progress

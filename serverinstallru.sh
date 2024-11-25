@@ -69,7 +69,7 @@ chmod +x $autostscr
 #-- Создаем службу, которая будет выполнять скрипт выше
 touch $autoservc
 echo -e "[Unit]" >> $autoservc
-echo -e "Description="AutoUpdate Service"" >> $autoservc
+echo -e "Description="AutoUpdate Service" >> $autoservc
 echo -e "[Service]" >> $autoservc
 echo -e "User=root" >> $autoservc
 echo -e "ExecStart=/usr/local/bin/autostart.sh" >> $autoservc

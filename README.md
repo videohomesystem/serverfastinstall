@@ -15,9 +15,10 @@ Script created for fast install VPN's Debian based server
 5) `wget https://raw.githubusercontent.com/videohomesystem/serverfastinstall/refs/heads/main/serverinstallru.sh`
 6) `bash serverinstall.sh`
 
-3) Сложить лапки и ждать
+3) ждать
 4) В какой-то момент установщик может попросить помощи, читаем, че пишет
-5) Радоваться жизни
+5) РЕБНУТЬ СЕРВЕР ОБЯЗАТЕЛЬНО!
+6) Радоваться жизни
 
 
 # Installation 

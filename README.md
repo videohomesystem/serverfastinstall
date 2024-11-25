@@ -29,3 +29,5 @@ Script created for fast install VPN's Debian based server
 4) Keep installation progress
 5) Enjoy
 
+# It's didnt't work?
+:c

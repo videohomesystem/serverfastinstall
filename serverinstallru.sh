@@ -69,7 +69,7 @@ chmod +x $autostscr
 #-- Создаем службу, которая будет выполнять скрипт выше
 touch $autoservc
 echo -e "[Unit]" >> $autoservc
-echo -e "Description="AutoUpdate Service" >> $autoservc
+echo -e "Description=AutoUpdate Service" >> $autoservc
 echo -e "[Service]" >> $autoservc
 echo -e "User=root" >> $autoservc
 echo -e "ExecStart=/usr/local/bin/autostart.sh" >> $autoservc
@@ -97,7 +97,7 @@ echo "net.core.default_qdisc=fq" >> $sysctlc
 echo "net.ipv4.tcp_congestion_control=bbr" >> $sysctlc
 sysctl -p
 #SYSRESULT="$(/usr/sbin/sysctl -a | grep congestion)"
-/usr/sbin/sysctl -p - для дебиан 12 в варианте десктопа
+#/usr/sbin/sysctl -p - для дебиан 12 в варианте десктопа
 #printf "\033[93m Изменения в ядро $SYSRESULT внесены  \033[0m"
 #============================================================================================================================
 printf "\033[93m Запуск очистки системы от старых пакетов... \033[0m"

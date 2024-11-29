@@ -1,3 +1,3 @@
 #!/bin/bash
-read -p  Привет c: Нажми Энтер"
+read -p  "Привет c: Нажми Энтер"
 reboot

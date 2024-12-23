@@ -85,6 +85,7 @@ echo -e "OnCalendar=Weekly" >> $autotimer
 echo -e "Unit=AutoUpdate.service" >> $autotimer
 #----------------------------------------------------------------------------------------------------------------------------
 systemd-analyze verify /etc/systemd/system/AutoUpdate.timer
+systemctl enable $autostscr
 systemctl start $autotimer
 systemctl start $autostscr
 #============================================================================================================================

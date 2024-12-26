@@ -29,8 +29,9 @@
 #esac
 #============================================================================================================================
 Like the:
-            curl --ssl-reqd --url "smtps://$SERVER:$PORT" \
-                 --user "$USER:$PASS" \
-                --mail-from "$SENDER_ADDRESS" \
-                --mail-rcpt "$RECIPIENT_ADDRESS" \
-                --upload-file "$MAIL_CONTENT_FILE"
+#            curl --ssl-reqd --url "smtps://$SERVER:$PORT" \
+#                 --user "$USER:$PASS" \
+#                --mail-from "$SENDER_ADDRESS" \
+#                --mail-rcpt "$RECIPIENT_ADDRESS" \
+#                --upload-file "$MAIL_CONTENT_FILE"
+#

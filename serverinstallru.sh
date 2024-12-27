@@ -83,7 +83,7 @@ touch $autotimer
 echo -e "[Timer]" >> $autotimer
 echo -e "OnCalendar=Weekly" >> $autotimer
 echo -e "Unit=AutoUpdate.service" >> $autotimer
-#---------------- Чет как будто работает, но после ребута будильник службы не запустился, надо разобраться...
+#---------------- Чет как будто работает, надо проверить, что после ребута он дейсвительно запустился
 systemd-analyze verify /etc/systemd/system/AutoUpdate.timer
 systemctl enable $autostscr
 systemctl start $autotimer

@@ -1,0 +1,7 @@
+https://dvmn.org/encyclopedia/deploy/renewing-certbot-certificates-for-nginx-using-a-systemd-timer/
+
+[Unit]
+Description=Certbot Renewal
+
+[Service]
+ExecStart=/usr/bin/certbot renew --force-renewal --post-hook "systemctl reload nginx.service"

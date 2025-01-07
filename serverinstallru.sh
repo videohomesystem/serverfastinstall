@@ -62,7 +62,8 @@ export EDITOR=mcedit
 #-- создаем скрипт, который послужит точкой выполнения автоапдейта по пути: /usr/local/bin/autostart.sh
 touch $autostscr
 echo -e '#!/bin/bash' >> $autostscr
-echo -e "apt update && apt upgrade -y" >> $autostscr
+echo -e "apt update && apt upgrade -y" >> $autostscr #-- обновление дистрибутивов && апгрейд системы с пропуском вопросов
+echo -e "apt autoremove -y" >> $autostscr #-- авточистка после обновления
 #--
 chmod +x $autostscr #-- выдаем права на выполнение
 #============================================================================================================================
@@ -75,6 +76,18 @@ echo -e "User=root" >> $autoservc
 echo -e "ExecStart=/usr/local/bin/autostart.sh" >> $autoservc
 echo -e "[Install]" >> $autoservc
 echo -e "WantedBy=multi-user.target" >> $autoservc
+#-
+echo -e "[Unit]" >> $autoservc
+echo -e "Description=AutoUpdate Service" >> $autoservc
+echo -e "Wants=autoupdate.timer" >> $autoservc
+#-
+echo -e "[Service]" >> $autoservc
+echo -e  "User=root" >> $autoservc
+echo -e  "Type=oneshot" >> $autoservc
+echo -e  "ExecStart="/usr/local/bin/autostart.sh"" >> $autoservc
+#-
+echo -e "[Install]" >> $autoservc
+echo -e "WantedBy=multi-user.target" >> $autoservc
 #============================================================================================================================
 #-- Создаем таймер, который будет запускать этот сервис раз в неделю, в 12 часов ночи. Путь: /etc/systemd/system/AutoUpdate.timer
 #-- Поясню - Раз в неделю, значит каждый понедельник, независимо от того, когда таймер был запущен. Если вы впервые запустили его в пятницу, значит,
@@ -83,22 +96,27 @@ touch $autotimer
 echo -e "[Timer]" >> $autotimer
 echo -e "OnCalendar=Weekly" >> $autotimer
 echo -e "Unit=AutoUpdate.service" >> $autotimer
+#-
+echo -e "[Unit]" >> $autotimer
+echo -e "Description=Auto Update timer" >> $autotimer
+echo -e "Requires=AutoUpdate.service" >> $autotimer
+#-
+echo -e "[Timer]" >> $autotimer
+echo -e "Unit=AutoUpdate.service" >> $autotimer
+echo -e "OnCalendar=weekly" >> $autotimer
+echo -e "Persistent=true" >> $autotimer
+#-
+echo -e "[Install]" >> $autotimer
+echo -e "WantedBy=timers.target" >> $autotimer
+#
 #---------------- Чет как будто работает, надо проверить, что после ребута он дейсвительно запустился
-systemd-analyze verify /etc/systemd/system/AutoUpdate.timer
+systemctl daemon-reload
+#systemd-analyze verify /etc/systemd/system/AutoUpdate.timer #-- оно точно надо?
 systemctl enable $autostscr
-systemctl start $autotimer
+systemctl enable $autotimer
+#-
 systemctl start $autostscr
-#============================================================================================================================
-#--------------------------------Fail2Ban - в дефолте работает как надо, банит и все такое, но можно сделать лучше. Мб сделаю
-#============================================================================================================================
-#touch $failsrc
-#echo -e "[DEFAULT]" >> $failsrc
-#echo -e "[ssh]" >> $failsrc
-#echo -e "findtime = 300" >> $failsrc #-- в течении 300 секунд (5 минут)
-#echo -e "maxretry = 4" >> $failsrc #-- количество траев  4
-#echo -e "bantime = 31536000" >> $failsrc #-- бантайм - 365 дней
-#service fail2ban restart
-#============================================================================================================================
+systemctl start $autotimer
 #----------------------------------------- BBR - он же - контроль управления перегрузками
 # https://sysadmin.pm/bbr-algo/
 # src: https://joyreactor.cc/post/5761728
@@ -127,3 +145,4 @@ bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.
 #
 printf "\033[93m Готово. \033[0m"
 read -p "Задачи завершены. ОБЯЗАТЕЛЬНО сделай перезагрузку ПОСЛЕ того, как сохранишь данные для подключения"
+exit 0

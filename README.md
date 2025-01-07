@@ -27,7 +27,8 @@ Script created for fast install VPN's Debian based server
 3) `bash serverinstallru.sh`
 
 4) Keep installation progress
-5) Enjoy
+5) REBOOT!
+6) Enjoy
 
 # It's didnt't work?
 :c

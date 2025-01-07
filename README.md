@@ -13,7 +13,7 @@ Script created for fast install VPN's Debian based server
 3) выполняем su - вводим пароль
 4) выполянем код:
 5) `wget https://raw.githubusercontent.com/videohomesystem/serverfastinstall/refs/heads/main/serverinstallru.sh`
-6) `bash serverinstall.sh`
+6) `bash serverinstallru.sh`
 
 3) ждать
 4) В какой-то момент установщик может попросить помощи, читаем, че пишет
@@ -24,7 +24,7 @@ Script created for fast install VPN's Debian based server
 # Installation 
 1) Run as root
 2) `wget https://raw.githubusercontent.com/videohomesystem/serverfastinstall/refs/heads/main/serverinstallru.sh`
-3) `bash serverinstall.sh`
+3) `bash serverinstallru.sh`
 
 4) Keep installation progress
 5) Enjoy

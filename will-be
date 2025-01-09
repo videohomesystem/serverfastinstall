@@ -6,14 +6,22 @@ Description=Certbot Renewal
 [Service]
 ExecStart=/usr/bin/certbot renew --force-renewal --post-hook "systemctl reload nginx.service"
 #============================================================================================================================
-failsrc="/etc/fail2ban/jail.conf
-touch $failsrc
-echo -e "[DEFAULT]" >> $failsrc
-echo -e "[ssh]" >> $failsrc
-echo -e "findtime = 300" >> $failsrc #-- в течении 300 секунд (5 минут)
-echo -e "maxretry = 4" >> $failsrc #-- количество траев  4
-echo -e "bantime = 31536000" >> $failsrc #-- бантайм - 365 дней
+fail2blocal="/etc/fail2ban/jail.local"
+touch $fail2blocal
+echo -e "[DEFAULT]" >> $fail2blocal
+echo -e "#ignoreip = BE CAREFUL!" >> $fail2blocal
+#--
+echo -e " "  >> $fail2blocal
+echo -e "[ssh]" >> $fail2blocal
+echo -e "findtime = 300" >> $fail2blocal #-- в течении 300 секунд (5 минут)
+echo -e "maxretry = 3" >> $fail2blocal #-- количество траев N
+echo -e "bantime = 31536000" >> $fail2blocal #-- бантайм - 365 дней
 service fail2ban restart
+#============================================================================================================================
+#============================================================================================================================
+ufw
+
+
 #============================================================================================================================
 
 #!/bin/bash

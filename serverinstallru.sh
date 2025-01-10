@@ -73,13 +73,15 @@ echo -e "apt autoremove -y" >> $autostscr #-- авточистка после о
 #--
 chmod +x $autostscr #-- выдаем права на выполнение
 #============================================================================================================================
-#-- Создаем службу, которая будет выполнять скрипт выше по пути: /etc/systemd/system/AutoUpdate.service
+#-- Создаем службу, которая будет выполнять скрипт выше по пути: /etc/systemd/system/AutoUpdate.service 
 touch $autoservc
 echo -e "[Unit]" >> $autoservc
 echo -e "Description=AutoUpdate Service" >> $autoservc
+#-
 echo -e "[Service]" >> $autoservc
 echo -e "User=root" >> $autoservc
 echo -e "ExecStart=/usr/local/bin/autostart.sh" >> $autoservc
+#-
 echo -e "[Install]" >> $autoservc
 echo -e "WantedBy=multi-user.target" >> $autoservc
 #-

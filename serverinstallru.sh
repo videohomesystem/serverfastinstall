@@ -106,6 +106,7 @@ echo -e "[Install]" >> $autotimer
 echo -e "WantedBy=timers.target" >> $autotimer
 #
 #---------------- Чет как будто работает, надо проверить, что после ребута он действительно запустился
+#=======--------- Работает оО
 systemctl daemon-reload
 #systemd-analyze verify /etc/systemd/system/AutoUpdate.timer #-- оно точно надо?
 systemctl enable $autostscr

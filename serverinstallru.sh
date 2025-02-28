@@ -75,15 +75,6 @@ chmod +x $autostscr #-- выдаем права на выполнение
 #============================================================================================================================
 #-- Создаем службу, которая будет выполнять скрипт выше по пути: /etc/systemd/system/AutoUpdate.service 
 touch $autoservc
-echo -e "[Unit]" >> $autoservc
-echo -e "Description=AutoUpdate Service" >> $autoservc
-#-
-echo -e "[Service]" >> $autoservc
-echo -e "User=root" >> $autoservc
-echo -e "ExecStart=/usr/local/bin/autostart.sh" >> $autoservc
-#-
-echo -e "[Install]" >> $autoservc
-echo -e "WantedBy=multi-user.target" >> $autoservc
 #-
 echo -e "[Unit]" >> $autoservc
 echo -e "Description=AutoUpdate Service" >> $autoservc
@@ -101,12 +92,9 @@ echo -e "WantedBy=multi-user.target" >> $autoservc
 #-- Поясню - Раз в неделю, значит каждый понедельник, независимо от того, когда таймер был запущен. Если вы впервые запустили его в пятницу, значит,
 #-- он в любом случае будет вновь запущен в понедельник.
 touch $autotimer
-echo -e "[Timer]" >> $autotimer
-echo -e "OnCalendar=Weekly" >> $autotimer
-echo -e "Unit=AutoUpdate.service" >> $autotimer
 #-
 echo -e "[Unit]" >> $autotimer
-echo -e "Description=Auto Update timer" >> $autotimer
+echo -e "Description=AutoUpdateTimer" >> $autotimer
 echo -e "Requires=AutoUpdate.service" >> $autotimer
 #-
 echo -e "[Timer]" >> $autotimer
@@ -117,7 +105,7 @@ echo -e "Persistent=true" >> $autotimer
 echo -e "[Install]" >> $autotimer
 echo -e "WantedBy=timers.target" >> $autotimer
 #
-#---------------- Чет как будто работает, надо проверить, что после ребута он дейсвительно запустился
+#---------------- Чет как будто работает, надо проверить, что после ребута он действительно запустился
 systemctl daemon-reload
 #systemd-analyze verify /etc/systemd/system/AutoUpdate.timer #-- оно точно надо?
 systemctl enable $autostscr
@@ -128,7 +116,7 @@ systemctl start $autotimer
 #----------------------------------------- BBR - он же - контроль управления перегрузками
 # https://sysadmin.pm/bbr-algo/
 # src: https://joyreactor.cc/post/5761728
-#------------------------- чрезвычайно важный твик ядра для сервера, --ЗНАЧИТЕЛЬНО--! Увеличивает пропускную способность. 
+#------------------------- чрезвычайно важный твик ядра для сервера, --== ЗНАЧИТЕЛЬНО! ==-- Увеличивает пропускную способность. 
 #============================================================================================================================
 echo "net.core.default_qdisc=fq" >> $sysctlc 
 echo "net.ipv4.tcp_congestion_control=bbr" >> $sysctlc

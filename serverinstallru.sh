@@ -71,7 +71,8 @@ echo -e '#!/bin/bash' >> $autostscr
 echo -e "apt update && apt upgrade -y" >> $autostscr #-- обновление дистрибутивов && апгрейд системы с пропуском вопросов
 echo -e "apt autoremove -y" >> $autostscr #-- авточистка после обновления
 echo -e "sleep 20" >> $autostscr #-- ждем
-echo -e "reboot" >> $autostscr #-- ребут сервера
+#echo -e "reboot" >> $autostscr #-- ребут сервера | НИ В КОЕМ СЛУЧАЕ!!!!!!
+echo -e "exit 0" >> $autostscr
 #--
 chmod +x $autostscr #-- выдаем права на выполнение
 #============================================================================================================================

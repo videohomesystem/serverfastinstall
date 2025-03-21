@@ -70,8 +70,8 @@ touch $autostscr
 echo -e '#!/bin/bash' >> $autostscr
 echo -e "apt update && apt upgrade -y" >> $autostscr #-- обновление дистрибутивов && апгрейд системы с пропуском вопросов
 echo -e "apt autoremove -y" >> $autostscr #-- авточистка после обновления
-echo -e "sleep 20" >> $autostscr #-- ждем
-#echo -e "reboot" >> $autostscr #-- ребут сервера | НИ В КОЕМ СЛУЧАЕ!!!!!!
+#echo -e "sleep 20" >> $autostscr #-- ждем
+#echo -e "reboot" >> $autostscr #-- ребут сервера | НИ В КОЕМ СЛУЧАЕ!!!
 echo -e "exit 0" >> $autostscr
 #--
 chmod +x $autostscr #-- выдаем права на выполнение
@@ -117,6 +117,7 @@ systemctl enable $autotimer
 #-
 systemctl start $autostscr
 systemctl start $autotimer
+#============================================================================================================================
 #----------------------------------------- BBR - он же - контроль управления перегрузками
 # https://sysadmin.pm/bbr-algo/
 # src: https://joyreactor.cc/post/5761728
@@ -160,6 +161,8 @@ bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.
 #============================================================================================================================
 #
 printf "\033[93m Готово. 
+\033[0m"
+printf "\033[93m Что бы воспользоваться командами VPN - набери x-ui и вооружись переводчиком. 
 \033[0m"
 read -p "Задачи завершены. ОБЯЗАТЕЛЬНО сделай перезагрузку ПОСЛЕ того, как сохранишь данные для подключения
 "

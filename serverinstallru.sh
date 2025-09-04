@@ -13,14 +13,14 @@
 #-- Я ОЧЕНЬ РЕКОМЕНДУЮ! Обновить файл Hosts под свои адреса и задачи
 # ENG --------------------- I'll realy tried it
 #============================================================================================================================
-srcl="/etc/apt/sources.list" #--переменная сорц листа
-sysctlc="/etc/sysctl.conf" #-- переменная сисцтл, куда внесем изменения для твика ядра
-appinst=(fail2ban mcedit curl ufw) #-- переменная цикла -- Тут пишем аппсы, БЕЗ запятых, ТОЛЬКО с пробелами и они будут установлены
-autostscr="/usr/local/bin/autostart.sh" #-- переменная для скрипта автообновления
-autoservc="/etc/systemd/system/AutoUpdate.service" #-- переменная для сервиса автообновления
-autotimer="/etc/systemd/system/AutoUpdate.timer" #-- переменная для таймера автообновления
-failsrc="/etc/fail2ban/jail.local" #-- переменная для создания файла конфигурации fail2ban
-#ufwrules="/etc/ufw/before.rules" #-- UFW
+srcl="/etc/apt/sources.list"                            #--переменная сорц листа
+sysctlc="/etc/sysctl.conf"                              #-- переменная сисцтл, куда внесем изменения для твика ядра
+appinst=(fail2ban mcedit curl ufw)                      #-- переменная цикла -- Тут пишем аппсы, БЕЗ запятых, ТОЛЬКО с пробелами и они будут установлены
+autostscr="/usr/local/bin/autostart.sh"                 #-- переменная для скрипта автообновления
+autoservc="/etc/systemd/system/AutoUpdate.service"      #-- переменная для сервиса автообновления
+autotimer="/etc/systemd/system/AutoUpdate.timer"        #-- переменная для таймера автообновления
+failsrc="/etc/fail2ban/jail.local"                      #-- переменная для создания файла конфигурации fail2ban
+#ufwbefore="/etc/ufw/before.rules"                      #-- UFW
 #appremove=(vim cron) #-- не люблю вим, снимаю с себя погоны айти за это с:
 #echo -e "" >> $var #-- кртл + с
 #============================================================================================================================
@@ -59,18 +59,6 @@ do
 done
 printf "\033[93m Установка приложенйи завершена.
 \033[0m"
-#============================================================================================================================
-#---------------------------------------------- Простенькая настройка Fail2Ban
-#============================================================================================================================
-touch $failsrc #-- Новый файл
-#-
-echo -e "[DEFAULT]" >> $failsrc #-- заголовок
-#echo -e " " >> $failsrc #-- просто для удобства
-echo -e "[ssh]" >> $failsrc #-- заголовок
-echo -e "findtime = 300" >> $failsrc #-- окно срабатывания 
-echo -e "maxretry = 3" >> $failsrc #-- количество траев внутри окна
-echo -e "bantime = 365d" >> $failsrc #-- бантайм
-
 #============================================================================================================================
 #---------------------------------------------- UFW --- /etc/ufw/before.rules
 #============================================================================================================================
@@ -138,17 +126,47 @@ systemctl enable $autotimer
 systemctl start $autostscr
 systemctl start $autotimer
 #============================================================================================================================
-#----------------------------------------- BBR - он же - контроль управления перегрузками
-# https://sysadmin.pm/bbr-algo/
-# src: https://joyreactor.cc/post/5761728
+#============================================= --------- SECURE ------------------------------------------
+#============================================= SYSCTL /etc/sysctl.conf
+#
 #------------------------- чрезвычайно важный твик ядра для сервера, --== ЗНАЧИТЕЛЬНО! ==-- Увеличивает пропускную способность. 
-#============================================================================================================================
+# BBR enable
 echo "net.core.default_qdisc=fq" >> $sysctlc 
 echo "net.ipv4.tcp_congestion_control=bbr" >> $sysctlc
+#ICMP ingore
+echo "net.ipv4.icmp_ignore_bogus_error_responses = 1" >> $sysctlc
+# block SYN-flood Attack 
+echo "net.ipv4.tcp_syncookies = 1" >> $sysctlc
+echo "net.ipv4.tcp_max_syn_backlog = 2048" >> $sysctlc
+echo "net.ipv4.tcp_synack_retries = 3" >> $sysctlc
+# mitm route attack
+echo "net.ipv4.conf.all.accept_source_route = 0" >> $sysctlc
+echo "net.ipv4.conf.default.accept_source_route = 0" >> $sysctlc
+# ipv6
+echo "net.ipv6.conf.all.disable_ipv6 = 1" >> $sysctlc
+echo "net.ipv6.conf.default.disable_ipv6 = 1" >> $sysctlc
+echo "net.ipv6.conf.lo.disable_ipv6 = 1" >> $sysctlc
+#
 sysctl -p
 #SYSRESULT="$(/usr/sbin/sysctl -a | grep congestion)"
 #/usr/sbin/sysctl -p - для дебиан 12 в варианте десктопа
 #printf "\033[93m Изменения в ядро $SYSRESULT внесены  \033[0m"
+
+#==================================================--- Простенькая настройка Fail2Ban
+touch $failsrc #-- Новый файл
+#-
+echo -e "[DEFAULT]" >> $failsrc #-- заголовок
+#echo -e " " >> $failsrc #-- просто для удобства
+echo -e "[ssh]" >> $failsrc #-- заголовок
+echo -e "findtime = 300" >> $failsrc #-- окно срабатывания 
+echo -e "maxretry = 3" >> $failsrc #-- количество траев внутри окна
+echo -e "bantime = 365d" >> $failsrc #-- бантайм
+#==================================================----- UFW
+#------------- ufwbefore = /etc/ufw/before.rules
+# игнор эхо запросов. Отключена часть скрипта, потому что не работает полученичение порта SSH, а значит, включение фаерволла заблокирует себя. Можно сделать вручную
+# -A ufw-before-input -p icmp --icmp-type echo-request -j DROP
+#-- console
+# ufw deny in from any to any proto ipv6
 #============================================================================================================================
 printf "\033[93m Запуск очистки системы от старых пакетов... 
 \033[0m"

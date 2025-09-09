@@ -21,6 +21,8 @@ autoservc="/etc/systemd/system/AutoUpdate.service"      #-- переменная
 autotimer="/etc/systemd/system/AutoUpdate.timer"        #-- переменная для таймера автообновления
 failsrc="/etc/fail2ban/jail.local"                      #-- переменная для создания файла конфигурации fail2ban
 #ufwbefore="/etc/ufw/before.rules"                      #-- UFW
+#hallow="/etc/hosts.allow"                              #-- 
+#hdeny="/etc/hosts.deny"                                #-- 
 #appremove=(vim cron) #-- не люблю вим, снимаю с себя погоны айти за это с:
 #echo -e "" >> $var #-- кртл + с
 #============================================================================================================================
@@ -167,6 +169,21 @@ echo -e "bantime = 365d" >> $failsrc #-- бантайм
 # -A ufw-before-input -p icmp --icmp-type echo-request -j DROP
 #-- console
 # ufw deny in from any to any proto ipv6
+#============================================================================================================================
+    #/etc/hosts.allow
+
+
+    #/etc/hosts.deny
+echo -e "SSHD: ALL" >> $hostsdeny
+echo -e "mysqld: ALL" >> $hostsdeny
+echo -e "postgres: ALL" >> $hostsdeny
+echo -e "apache2: ALL" >> $hostsdeny
+echo -e "nginx: ALL" >> $hostsdeny
+echo -e "httpd: ALL" >> $hostsdeny
+echo -e "cupsd: ALL" >> $hostsdeny
+echo -e "ntpd: ALL" >> $hostsdeny
+echo -e "syslog: ALL" >> $hostsdeny
+
 #============================================================================================================================
 printf "\033[93m Запуск очистки системы от старых пакетов... 
 \033[0m"

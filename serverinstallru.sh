@@ -23,6 +23,7 @@ failsrc="/etc/fail2ban/jail.local"                      #-- переменная
 #ufwbefore="/etc/ufw/before.rules"                      #-- UFW
 #hallow="/etc/hosts.allow"                              #-- 
 #hdeny="/etc/hosts.deny"                                #-- 
+#localip=$(hostname --ip-address)                       #-- 
 #appremove=(vim cron) #-- не люблю вим, снимаю с себя погоны айти за это с:
 #echo -e "" >> $var #-- кртл + с
 #============================================================================================================================
@@ -170,19 +171,21 @@ echo -e "bantime = 365d" >> $failsrc #-- бантайм
 #-- console
 # ufw deny in from any to any proto ipv6
 #============================================================================================================================
-    #/etc/hosts.allow
-
+#------------------- ------ ------ hosts - Желательно сделать
+#    #/etc/hosts.allow
+#echo -e "ALL: localhost" >> $hallow
+#echo -e "ALL: $localip" >> $hallow
 
     #/etc/hosts.deny
-echo -e "SSHD: ALL" >> $hostsdeny
-echo -e "mysqld: ALL" >> $hostsdeny
-echo -e "postgres: ALL" >> $hostsdeny
-echo -e "apache2: ALL" >> $hostsdeny
-echo -e "nginx: ALL" >> $hostsdeny
-echo -e "httpd: ALL" >> $hostsdeny
-echo -e "cupsd: ALL" >> $hostsdeny
-echo -e "ntpd: ALL" >> $hostsdeny
-echo -e "syslog: ALL" >> $hostsdeny
+####--------------------- NO echo -e "SSHD: ALL" >> $hdeny
+#echo -e "mysqld: ALL" >> $hdeny
+#echo -e "postgres: ALL" >> $hdeny
+#echo -e "apache2: ALL" >> $hdeny
+#echo -e "nginx: ALL" >> $hdeny
+#echo -e "httpd: ALL" >> $hdeny
+#echo -e "cupsd: ALL" >> $hdeny
+#echo -e "ntpd: ALL" >> $hdeny
+#echo -e "syslog: ALL" >> $hdeny
 
 #============================================================================================================================
 printf "\033[93m Запуск очистки системы от старых пакетов... 

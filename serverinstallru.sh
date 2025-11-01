@@ -37,16 +37,19 @@ echo "deb http://deb.debian.org/debian bookworm main non-free-firmware" >> $srcl
 apt update && apt install ca-certificates -y && apt install apt-transport-https -y
 # чистим файл вновь
 echo -e "" > $srcl 
-# Добавляем новые строки в файл
-echo -e "deb https://deb.debian.org/debian bookworm main non-free-firmware" >> $srcl
-echo -e "deb-src https://deb.debian.org/debian bookworm main non-free-firmware" >> $srcl
-#
-echo -e "deb https://security.debian.org/debian-security bookworm-security main non-free-firmware" >> $srcl
-echo -e "deb-src https://security.debian.org/debian-security bookworm-security main non-free-firmware" >> $srcl
-#
-echo -e "deb https://deb.debian.org/debian bookworm-updates main non-free-firmware" >> $srcl
-echo -e "deb-src https://deb.debian.org/debian bookworm-updates main non-free-firmware" >> $srcl
-#
+#-
+sudo tee > $srcl &>/dev/null << EOF
+deb https://deb.debian.org/debian bookworm main non-free-firmware
+deb-src https://deb.debian.org/debian bookworm main non-free-firmware
+
+deb https://security.debian.org/debian-security bookworm-security main non-free-firmware
+deb-src https://security.debian.org/debian-security bookworm-security main non-free-firmware
+
+deb https://deb.debian.org/debian bookworm-updates main non-free-firmware
+deb-src https://deb.debian.org/debian bookworm-updates main non-free-firmware
+
+EOF
+
 #============================================================================================================================
 printf "\033[93m Запускается обновление системы... 
 \033[0m"
@@ -77,47 +80,55 @@ update-alternatives --set editor /usr/bin/mcedit
 #============================================================================================================================
 #-- создаем скрипт, который послужит точкой выполнения автоапдейта по пути: /usr/local/bin/autostart.sh
 touch $autostscr
-#-
-echo -e '#!/bin/bash' >> $autostscr
-echo -e "apt update && apt upgrade -y" >> $autostscr #-- обновление дистрибутивов && апгрейд системы с пропуском вопросов
-echo -e "apt autoremove -y" >> $autostscr #-- авточистка после обновления
+
 #echo -e "sleep 20" >> $autostscr #-- ждем
 #echo -e "reboot" >> $autostscr #-- ребут сервера | НИ В КОЕМ СЛУЧАЕ!!!
-echo -e "exit 0" >> $autostscr
+#-
+cat > autostscr << EOF
+!/bin/bash
+apt update && apt upgrade -y
+apt autoremove -y
+
+exit 0
+EOF
 #--
 chmod +x $autostscr #-- выдаем права на выполнение
 #============================================================================================================================
 #-- Создаем службу, которая будет выполнять скрипт выше по пути: /etc/systemd/system/AutoUpdate.service 
 touch $autoservc
 #-
-echo -e "[Unit]" >> $autoservc
-echo -e "Description=AutoUpdate Service" >> $autoservc
-echo -e "Wants=autoupdate.timer" >> $autoservc
-#-
-echo -e "[Service]" >> $autoservc
-echo -e  "User=root" >> $autoservc
-echo -e  "Type=oneshot" >> $autoservc
-echo -e  "ExecStart="/usr/local/bin/autostart.sh"" >> $autoservc
-#-
-echo -e "[Install]" >> $autoservc
-echo -e "WantedBy=multi-user.target" >> $autoservc
+cat > $autoservc << EOF
+[Unit]
+Description=AutoUpdate Service
+Wants=autoupdate.timer
+
+[Service]
+User=root
+Type=oneshot
+ExecStart="/usr/local/bin/autostart.sh"
+
+[Install]
+WantedBy=multi-user.target
+EOF
 #============================================================================================================================
 #-- Создаем таймер, который будет запускать этот сервис раз в неделю, в 12 часов ночи. Путь: /etc/systemd/system/AutoUpdate.timer
 #-- Поясню - Раз в неделю, значит каждый понедельник, независимо от того, когда таймер был запущен. Если вы впервые запустили его в пятницу, значит,
 #-- он в любом случае будет вновь запущен в понедельник.
 touch $autotimer
 #-
-echo -e "[Unit]" >> $autotimer
-echo -e "Description=AutoUpdateTimer" >> $autotimer
-echo -e "Requires=AutoUpdate.service" >> $autotimer
-#-
-echo -e "[Timer]" >> $autotimer
-echo -e "Unit=AutoUpdate.service" >> $autotimer
-echo -e "OnCalendar=weekly" >> $autotimer
-echo -e "Persistent=true" >> $autotimer
-#-
-echo -e "[Install]" >> $autotimer
-echo -e "WantedBy=timers.target" >> $autotimer
+cat > $autotimer << EOF
+[Unit]
+Description=AutoUpdateTimer
+Requires=AutoUpdate.service
+
+[Timer]
+Unit=AutoUpdate.service
+OnCalendar=weekly
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+EOF
 #
 #---------------- Чет как будто работает, надо проверить, что после ребута он действительно запустился
 #=======--------- Работает оО

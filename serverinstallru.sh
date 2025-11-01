@@ -11,6 +11,7 @@
 # - ставим 3x-ui и отдаем управление этому скрипту
 # - ОБЯЗАТЕЛЬНО ребутаемся
 #-- Я ОЧЕНЬ РЕКОМЕНДУЮ! Обновить файл Hosts под свои адреса и задачи
+#
 # https://wiki.archlinux.org/title/Sysctl_(%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9)
 #============================================================================================================================
 srcl="/etc/apt/sources.list"                            #--переменная сорц листа
@@ -20,6 +21,8 @@ autostscr="/usr/local/bin/autostart.sh"                 #-- переменная
 autoservc="/etc/systemd/system/AutoUpdate.service"      #-- переменная для сервиса автообновления
 autotimer="/etc/systemd/system/AutoUpdate.timer"        #-- переменная для таймера автообновления
 failsrc="/etc/fail2ban/jail.local"                      #-- переменная для создания файла конфигурации fail2ban
+vercheck=$(cat /etc/debian_version 2>/dev/null | tr -d ' ' | head -n1)
+
 #ufwbefore="/etc/ufw/before.rules"                      #-- UFW
 #hallow="/etc/hosts.allow"                              #-- 
 #hdeny="/etc/hosts.deny"                                #-- 
@@ -27,18 +30,16 @@ failsrc="/etc/fail2ban/jail.local"                      #-- переменная
 #appremove=(vim cron) #-- не люблю вим, снимаю с себя погоны айти за это с:
 #echo -e "" >> $var #-- кртл + с
 #============================================================================================================================
-printf "\033[93m Изменение репозиториев... 
-\033[0m"
-#- чистим файл
-echo -e "" > $srcl
-# Добавляем новые строки в файл БЕЗ HTTP-S- - это нужно как временное решение для установки сертов, если их нет, а их скорее всего и нет :с
-echo -e "\n# Основной репозиторий" >> $srcl
-echo "deb http://deb.debian.org/debian bookworm main non-free-firmware" >> $srcl
-apt update && apt install ca-certificates -y && apt install apt-transport-https -y
-# чистим файл вновь
-echo -e "" > $srcl 
-#-
-sudo tee > $srcl &>/dev/null << EOF
+printf "\033[93m Изменение репозиториев... \033[0m\n"
+
+if [[ "$vercheck" == 12.* ]]; then
+    sudo tee /etc/apt/sources.list &>/dev/null << EOF
+deb http://deb.debian.org/debian bookworm main non-free-firmware
+EOF
+    apt update && apt install ca-certificates -y && apt install apt-transport-https -y
+        #-- Раньше нужно было ставить серты вручную, может на свежих 12-х билдах уже не надо.
+        #-- на установку это не повлияет, тестить не хочу
+    sudo tee /etc/apt/sources.list &>/dev/null << EOF
 deb https://deb.debian.org/debian bookworm main non-free-firmware
 deb-src https://deb.debian.org/debian bookworm main non-free-firmware
 
@@ -47,24 +48,40 @@ deb-src https://security.debian.org/debian-security bookworm-security main non-f
 
 deb https://deb.debian.org/debian bookworm-updates main non-free-firmware
 deb-src https://deb.debian.org/debian bookworm-updates main non-free-firmware
-
 EOF
 
+elif [[ "$vercheck" == 13.* ]]; then
+    sudo tee /etc/apt/sources.list &>/dev/null << EOF
+deb https://deb.debian.org/debian/ trixie main non-free-firmware
+deb-src https://deb.debian.org/debian/ trixie main non-free-firmware
+
+deb https://security.debian.org/debian-security trixie-security main non-free-firmware
+deb-src https://security.debian.org/debian-security trixie-security main non-free-firmware
+
+# trixie-updates, to get updates before a point release is made;
+# see https://www.debian.org/doc/manuals/debian-reference/ch02.en.html#_updates_and_backports
+
+deb https://deb.debian.org/debian/ trixie-updates main non-free-firmware
+deb-src https://deb.debian.org/debian/ trixie-updates main non-free-firmware
+
+EOF
+else
+    printf "\033[91m \nОШИБКА! Версия Debian: $vercheck - репозитории не настроены, т.к. поддерживаются только 12 и 13 релизы. \033[0m \n"
+    read -p "ОШИБКА РАБОТЫ СКРИПТА!"
+    exit 1
+fi
+
 #============================================================================================================================
-printf "\033[93m Запускается обновление системы... 
-\033[0m"
-apt update && apt upgrade -y # - индексирует содержимое репозиториев > обновляет систему > скипает вопросы установщика
-printf "\033[93m Система обновлена.
-\033[0m"
+printf "\033[93m Запускается обновление системы... \033[0m\n"
+    apt update && apt upgrade -y # - индексирует содержимое репозиториев > обновляет систему > скипает вопросы установщика
+printf "\033[93m Система обновлена.\033[0m\n"
 #
-printf "\033[93m Выполняется установка приложений... 
-\033[0m"
+printf "\033[93m Выполняется установка приложений... \033[0m\n"
 for app in "${appinst[@]}"
 do
     sudo apt install -y "$app"
 done
-printf "\033[93m Установка приложенйи завершена.
-\033[0m"
+printf "\033[93m Установка приложений завершена.\033[0m\n"
 #============================================================================================================================
 #---------------------------------------------- UFW --- /etc/ufw/before.rules
 #============================================================================================================================
@@ -167,14 +184,16 @@ sysctl -p
 #printf "\033[93m Изменения в ядро $SYSRESULT внесены  \033[0m"
 
 #==================================================--- Простенькая настройка Fail2Ban
+
 touch $failsrc #-- Новый файл
-#-
-echo -e "[DEFAULT]" >> $failsrc #-- заголовок
-#echo -e " " >> $failsrc #-- просто для удобства
-echo -e "[ssh]" >> $failsrc #-- заголовок
-echo -e "findtime = 300" >> $failsrc #-- окно срабатывания 
-echo -e "maxretry = 3" >> $failsrc #-- количество траев внутри окна
-echo -e "bantime = 365d" >> $failsrc #-- бантайм
+cat > $failsrc << EOF
+[DEFAULT]
+[ssh]
+findtime = 300
+maxretry = 3
+bantime = 365d
+EOF
+
 #==================================================----- UFW
 #------------- ufwbefore = /etc/ufw/before.rules
 # игнор эхо запросов. Отключена часть скрипта, потому что не работает полученичение порта SSH, а значит, включение фаерволла заблокирует себя. Можно сделать вручную
@@ -199,40 +218,26 @@ echo -e "bantime = 365d" >> $failsrc #-- бантайм
 #echo -e "syslog: ALL" >> $hdeny
 
 #============================================================================================================================
-printf "\033[93m Запуск очистки системы от старых пакетов... 
-\033[0m"
+printf "\033[93m Запуск очистки системы от старых пакетов... \033[0m\n"
 apt autoremove -y #--- чистим старые пакеты автоудалятором
 #============================================================================================================================
-printf "\033[93m А теперь внимательно - сейчас управление будет передано 3x-ui. 
-
-\033[0m"
-
-printf "\033[93m ОЧЕНЬ внимательно читаем, че там будет написано. 
-
-\033[0m"
-
-printf "\033[93m Он спросит - настроить-ли панель управления? НЕТ - идеально, т.к. нам нужно скрыть факт нахождения впн на своем сервере 
-
-\033[0m"
-
-printf "\033[93m Потом, там появится информация, которая НЕОБХОДИМА для подключения к твоему серверу 
-
-\033[0m"
-
+printf "\033[93m А теперь внимательно - сейчас управление будет передано 3x-ui.\033[0m\n"
+printf "\033[93m ОЧЕНЬ внимательно читаем, че там будет написано. \033[0m\n"
+printf "\033[93m Он спросит - настроить-ли панель управления? НЕТ - идеально, т.к. нам нужно скрыть факт нахождения впн на своем сервере \033[0m\n"
+printf "\033[93m Потом, там появится информация, которая НЕОБХОДИМА для подключения к твоему серверу \033[0m\n"
 read -p "Прочитал? Точно? Жми Энтер.
 "
-
-read -p "С первого раза обычно не читают, а это важно. Вот теперь начинаем установку после нажатия enter.
+printf "\033[93m Точно прочитал? Обычно не читают, теперь прочитаешь. \033[0m\n"
+read -p "ENTER...?
 "
 #============================================================================================================================
 #--- 3x UI
 bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
 #============================================================================================================================
 #
-printf "\033[93m Готово. 
-\033[0m"
-printf "\033[93m Что бы воспользоваться командами VPN - набери x-ui и вооружись переводчиком. 
-\033[0m"
-read -p "Задачи завершены. ОБЯЗАТЕЛЬНО сделай перезагрузку ПОСЛЕ того, как сохранишь данные для подключения
-"
+printf "\033[93m Готово. \033[0m\n"
+printf "\033[93m Что бы воспользоваться командами VPN - набери x-ui и вооружись переводчиком.\033[0m\n"
+
+printf "\033[93m Задачи завершены. ОБЯЗАТЕЛЬНО сделай перезагрузку ПОСЛЕ того, как сохранишь данные для подключения....\033[0m\n"
+read -p "ENTER...?"
 exit 0

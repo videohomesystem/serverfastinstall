@@ -51,20 +51,21 @@ deb-src https://deb.debian.org/debian bookworm-updates main non-free-firmware
 EOF
 
 elif [[ "$vercheck" == 13.* ]]; then
-    sudo tee /etc/apt/sources.list &>/dev/null << EOF
-deb https://deb.debian.org/debian/ trixie main non-free-firmware
-deb-src https://deb.debian.org/debian/ trixie main non-free-firmware
+printf "skip repo steps"
+#    sudo tee /etc/apt/sources.list &>/dev/null << EOF
+#deb https://deb.debian.org/debian/ trixie main non-free-firmware
+#deb-src https://deb.debian.org/debian/ trixie main non-free-firmware
 
-deb https://security.debian.org/debian-security trixie-security main non-free-firmware
-deb-src https://security.debian.org/debian-security trixie-security main non-free-firmware
+#deb https://security.debian.org/debian-security trixie-security main non-free-firmware
+#deb-src https://security.debian.org/debian-security trixie-security main non-free-firmware
 
 # trixie-updates, to get updates before a point release is made;
 # see https://www.debian.org/doc/manuals/debian-reference/ch02.en.html#_updates_and_backports
 
-deb https://deb.debian.org/debian/ trixie-updates main non-free-firmware
-deb-src https://deb.debian.org/debian/ trixie-updates main non-free-firmware
+#deb https://deb.debian.org/debian/ trixie-updates main non-free-firmware
+#deb-src https://deb.debian.org/debian/ trixie-updates main non-free-firmware
 
-EOF
+#EOF
 else
     printf "\033[91m \nОШИБКА! Версия Debian: $vercheck - репозитории не настроены, т.к. поддерживаются только 12 и 13 релизы. \033[0m \n"
     read -p "ОШИБКА РАБОТЫ СКРИПТА!"

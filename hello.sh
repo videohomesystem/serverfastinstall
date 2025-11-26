@@ -10,7 +10,7 @@ dspace=$(df -h / | awk 'NR==2{print "📦 " $2 " total | 💾 " $3 " used | 🆓
 uptime=$(uptime -p)
 localip=$(hostname --ip-address)
 #===================================
-printf "\n\033[93m ####---- Welcome to \e[1;37m $hostname \033[93m ----#### \033[0m\n"
+printf "\n\033[93m ####---- Welcome to\e[1;37m> $hostname <\033[93m ----#### \033[0m\n"
 echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"
 printf "%b" "\033[93m Disk space: \e[1;37m $dspace \033[0m\n"
 printf "\033[93m Uptime: \e[1;37m $uptime \033[0m\n"

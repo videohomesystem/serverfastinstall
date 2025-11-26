@@ -1,16 +1,20 @@
 #!/bin/bash
+#   1 - clear /etc/motd                => cat /dev/null > /etc/motd
+#   2 - create /etc/profile.d/hello.sh => touch /etc/profile.d/hello.sh
+#   4 - copy ALL to /etc/profile.d/hello.sh
+#   3 - enjoy!
 #
 #        Hello message
-#   /etc/profile.d/hello.sh
-#
+#   execute > /etc/profile.d/hello.sh
 #
 #"\033[93m\n yellow text -\e[1;37m white text \033[0m\n"
+#
 hostname=$(hostname) 
 dspace=$(df -h / | awk 'NR==2{print "📦 " $2 " total | 💾 " $3 " used | 🆓 " $4 " free | 📊 " $5}')
 uptime=$(uptime -p)
 localip=$(hostname --ip-address)
 #===================================
-printf "\n\033[93m [[[---- Welcome to\e[1;37m> $hostname <\033[93m ----]]] \033[0m\n"
+printf "\n\033[93m ####---- Welcome to\e[1;37m> $hostname <\033[93m ----#### \033[0m\n"
 echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"
 printf "%b" "\033[93m Disk space: \e[1;37m $dspace \033[0m\n"
 printf "\033[93m Uptime: \e[1;37m $uptime \033[0m\n"

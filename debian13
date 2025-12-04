@@ -29,6 +29,9 @@ sshdconf="/etc/ssh/sshd_config.d/99-ssh.conf"
 KEY_NAME="root_ed25519_key"
 KEY_PATH="/root/.ssh"
 #-------------
+motdd="/etc/motd"
+hellosh="/etc/profile.d/hello.sh"
+#--
 hostname=$(hostname) 
 dspace=$(df -h / | awk 'NR==2{print "📦 " $2 " total | 💾 " $3 " used | 🆓 " $4 " free | 📊 " $5}')
 uptime=$(uptime -p)
@@ -156,7 +159,11 @@ bantime = 365d
 EOF
 
 #=============================--- LOGON HELLO MESSAGE
-
+tee $motdd %>/dev/null/
+#-
+touch $hellosh
+#-
+cat > $hellosh << EOF
 printf "\n\e[1;37m------------------------*|||*------------------------\033[0m\n"
 printf "\n\033[93m [[[[---- Welcome to\e[1;37m > $hostname <\033[93m ----]]]] \033[0m\n"
 echo " "
@@ -166,6 +173,7 @@ printf "\033[93m IP: \e[1;37m $localip \033[0m\n"
 printf "\033[93m*-=-=-=-=-=-=-=-=-\e[1;37m> UFW STATUS <\033[93m-=-=-=-=-=-=-=-=-* \033[0m\n"
 printf "%b" "\033[93m ufw: \e[1;37m $ufws \033[0m"
 printf "\n\e[1;37m------------------------*...*------------------------\033[0m\n"
+EOF
 
 #=============================--- SSHD
 #   /root/.ssh/

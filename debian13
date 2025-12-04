@@ -28,17 +28,10 @@ sshdauth="/root/.ssh/authorized_key"
 sshdconf="/etc/ssh/sshd_config.d/99-ssh.conf"
 KEY_NAME="root_ed25519_key"
 KEY_PATH="/root/.ssh"
-#-------------
+#-----------------------------------------
 motdd="/etc/motd"
 hellosh="/etc/profile.d/hello.sh"
-#--
-hostname=$(hostname) 
-dspace=$(df -h / | awk 'NR==2{print "📦 " $2 " total | 💾 " $3 " used | 🆓 " $4 " free | 📊 " $5}')
-uptime=$(uptime -p)
-#-------------
-localv4=$(hostname --all-ip-addresses | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
-localv6=$(hostname --all-ip-addresses | grep -Eo '([0-9a-fA-F]{0,4}:){1,7}[0-9a-fA-F]{0,4}')
-#-------------
+#-----------------------------------------
 ufws=$(ufw status verbose)
 
 #ufwbefore="/etc/ufw/before.rules"                      #-- UFW
@@ -166,10 +159,28 @@ tee $motdd %>/dev/null/
 #-
 touch $hellosh
 #-
-cat > $hellosh << EOF
-ufws=$(ufw status verbose)
-#fail2=$(fail2ban-client status | grep 'banned')
-#echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"
+cat > $hellosh << 'EOF'
+
+#!/bin/bash
+#-------------------------------------------------------------------------
+#   1 - clear /etc/motd                => cat /dev/null > /etc/motd
+#   2 - create /etc/profile.d/hello.sh => touch /etc/profile.d/hello.sh
+#   4 - copy ALL to /etc/profile.d/hello.sh
+#   3 - enjoy!
+#-------------------------------------------------------------------------
+#        Hellos SSH message 
+#        execute > /etc/profile.d/hello.sh
+#        tested on Denian 13
+#
+#"\033[93m\n yellow text -\e[1;37m white text \033[0m\n"
+#--
+hostname=$(hostname) 
+dspace=$(df -h / | awk 'NR==2{print "📦 " $2 " total | 💾 " $3 " used | 🆓 " $4 " free | 📊 " $5}')
+uptime=$(uptime -p)
+#localip=$(hostname --ip-address)
+localv4=$(hostname --all-ip-addresses | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
+localv6=$(hostname --all-ip-addresses | grep -Eo '([0-9a-fA-F]{0,4}:){1,7}[0-9a-fA-F]{0,4}')
+#==========================================
 printf "\n\e[1;37m------------------------*|||*------------------------\033[0m\n"
 printf "\n\033[93m [[[[---- Welcome to\e[1;37m> $hostname <\033[93m ----]]]] \033[0m\n"
 echo " "
@@ -181,6 +192,7 @@ printf "\033[93m Uptime: \e[1;37m $uptime \033[0m\n"
 printf "\033[93m*-=-=-=-=-=-=-=-=-\e[1;37m> UFW STATUS <\033[93m-=-=-=-=-=-=-=-=-* \033[0m\n"
 printf "%b" "\033[93m ufw: \e[1;37m $ufws \033[0m"
 printf "\n\e[1;37m------------------------*...*------------------------\033[0m\n"
+
 EOF
 
 #=============================--- SSHD

@@ -102,7 +102,7 @@ touch $autostscr
 #echo -e "sleep 20" >> $autostscr #-- ждем
 #echo -e "reboot" >> $autostscr #-- ребут сервера | НИ В КОЕМ СЛУЧАЕ!!!
 #-
-cat > autostscr << EOF
+cat > $autostscr << EOF
 !/bin/bash
 apt update && apt upgrade -y
 apt autoremove -y

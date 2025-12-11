@@ -1,0 +1,94 @@
+https://dvmn.org/encyclopedia/deploy/renewing-certbot-certificates-for-nginx-using-a-systemd-timer/
+
+[Unit]
+Description=Certbot Renewal
+
+[Service]
+ExecStart=/usr/bin/certbot renew --force-renewal --post-hook "systemctl reload nginx.service"
+#============================================================================================================================
+fail2blocal="/etc/fail2ban/jail.local"
+touch $fail2blocal
+echo -e "[DEFAULT]" >> $fail2blocal
+echo -e "#ignoreip = BE CAREFUL!" >> $fail2blocal
+#--
+echo -e " "  >> $fail2blocal
+echo -e "[ssh]" >> $fail2blocal
+echo -e "findtime = 300" >> $fail2blocal #-- в течении 300 секунд (5 минут)
+echo -e "maxretry = 3" >> $fail2blocal #-- количество траев N
+echo -e "bantime = 31536000" >> $fail2blocal #-- бантайм - 365 дней
+service fail2ban restart
+#============================================================================================================================
+#============================================================================================================================
+ufw
+
+
+#============================================================================================================================
+
+#!/bin/bash
+# grep ПОИСК ПУТЬ
+$fail2path="/etc/fail2ban/jail.conf"
+$fail2port='^port.*=.*22$' 
+if grep $fail2port $fail2path
+then
+echo "Текущий порт fail2ban установлен: $fail2 "
+fi
+#============================================================================================================================
+appis=ca-certificates
+I=`dpkg -s $appis | grep "Status" ` #проверяем состояние пакета (dpkg) и ищем в выводе его статус (grep)
+if [ -n "$I" ] #проверяем что нашли строку со статусом (что строка не пуста)
+then
+   echo $appis" installed" #выводим результат
+else
+   echo $appis" not installed"
+fi
+#--
+appiss=apt-transport-https
+I=`dpkg -s $appis | grep "Status" ` #проверяем состояние пакета (dpkg) и ищем в выводе его статус (grep)
+if [ -n "$I" ] #проверяем что нашли строку со статусом (что строка не пуста)
+then
+   echo $appis" installed" #выводим результат
+else
+   echo $appis" not installed"
+fi
+#============================================================================================================================
+#============================================================================================================================
+#=============================---- Вроде даже работает, лол
+read -p "пу пу пуууу"
+Идея - введите доверенные адреса
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-
+ipadrs=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
+hostsallow="/etc/hosts.allow"
+hostsdeny="/etc/hosts.deny"
+#-
+echo -e "ALL: $ipadrs" >> $hostsallow
+echo -e "ALL: 172.0.0.0/24" >> $hostsallow
+echo -e "ALL: 172.17.0.0/24" >> $hostsallow
+echo -e " " >> $hostsallow
+#=-=-=-=-=-=-=-=-=-=-=-=-=-
+echo -e "ALL: VNC" >> $hostsdeny
+echo -e "ALL: RDP" >> $hostsdeny
+echo -e "ALL: HTTP" >> $hostsdeny
+echo -e " " >> $hostsdeny
+
+===============================
+#---------- ВНИМАНИЕ! ДОСТУП К ПАНЕЛИ БУДЕТ ТОЛЬКО ЧЕРЕЗ ВПН!!! ----------------------
+$sshport= how to get???
+ipadrs=$(hostname --ip-address)
+ufw allow from $ipadrs
+ufw allow from 443
+ufw allow from 22
+ufw enable
+#============================================================================================================================
+#============================================================================================================================
+ipadrs=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
+
+ipadrs=$(ip address | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
+
+ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'
+
+ifconfig | sed -En 's/(addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'
+
+hostname --ip-address
+#============================================================================================================================

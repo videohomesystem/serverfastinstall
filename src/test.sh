@@ -1,3 +1,2 @@
 #!/bin/bash
-read -p  "Привет c: Нажми Энтер"
-reboot
+read -p  "Каталог src"

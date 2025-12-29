@@ -21,7 +21,7 @@ ufws=$(ufw status verbose)
 #fail2=$(fail2ban-client status | grep 'banned')
 #echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"
 printf "\n\e[1;37m------------------------*|||*------------------------\033[0m\n"
-printf "\n\033[93m [[[[---- Welcome to\e[1;37m> $hostname <\033[93m ----]]]] \033[0m\n"
+printf "\n\033[93m [---- Welcome to\e[1;37m > $hostname <\033[93m ----] \033[0m\n"
 echo " "
 printf "\033[93m IPv4:\e[1;37m ${localv4:-N\A}\033[0m\n"
 printf "\033[93m IPv6:\e[1;37m ${localv6:-N\A}\033[0m\n"

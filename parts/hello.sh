@@ -4,7 +4,7 @@
 #   4 - copy ALL to /etc/profile.d/hello.sh
 #   3 - enjoy!
 #
-#        Привественный экран при входе по SSH
+#        Hello SSH logon screen
 #        execute > /etc/profile.d/hello.sh
 #        tested on Denian 13
 #
@@ -19,6 +19,7 @@ localv6=$(hostname --all-ip-addresses | grep -Eo '([0-9a-fA-F]{0,4}:){1,7}[0-9a-
 #-------------
 ufws=$(ufw status verbose)
 #fail2=$(fail2ban-client status | grep 'banned')
+clear
 #echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"
 printf "\n\e[1;37m------------------------*|||*------------------------\033[0m\n"
 printf "\n\033[93m [---- Welcome to\e[1;37m > $hostname <\033[93m ----] \033[0m\n"

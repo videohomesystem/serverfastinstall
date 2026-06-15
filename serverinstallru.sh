@@ -18,8 +18,9 @@ srcl="/etc/apt/sources.list"                            #-- переменная
 srcdrop="/etc/apt/sources.list.d/00-off-deb.sources"    #-- Сорцы дебиана
 sysctlc="/etc/sysctl.conf"                              #-- переменная сисцтл, куда внесем изменения для твика ядра
 sysctl13="/usr/lib/sysctl.d/50-custom.conf"             #-- DEBIAN 13 - переменная сисцтл, куда внесем изменения для твика ядра
-appinst=(fail2ban mcedit curl ufw)                      #-- переменная цикла -- Тут пишем аппсы, БЕЗ запятых, ТОЛЬКО с пробелами и они будут установлены
+appinst=(fail2ban mcedit curl ufw apt-transport-https ca-certificates) #-- переменная цикла -- Тут пишем аппсы, БЕЗ запятых, ТОЛЬКО с пробелами и они будут установлены
 hellosh="/etc/profile.d/hello.sh"                       #-- Приветственный скрипт SSH
+motdd="/etc/motd"                                       #-- Это надо очистить
 #---------------------------------------
 autostscr="/usr/local/bin/autostart.sh"                 #-- переменная для скрипта автообновления
 autoservc="/etc/systemd/system/AutoUpdate.service"      #-- переменная для сервиса автообновления
@@ -27,6 +28,7 @@ autotimer="/etc/systemd/system/AutoUpdate.timer"        #-- переменная
 #---------------------------------------
 failsrc="/etc/fail2ban/jail.local"                      #-- переменная для создания файла конфигурации fail2ban
 vercheck=$(cat /etc/debian_version 2>/dev/null | tr -d ' ' | head -n1)
+#vercheck=$(cut -d. -f1 /etc/debian_version)
 
 #ufwbefore="/etc/ufw/before.rules"                      #-- UFW
 #hallow="/etc/hosts.allow"                              #-- 
@@ -267,7 +269,7 @@ echo "net.ipv4.tcp_congestion_control=bbr" >> $sysctlc
 # block SYN-flood Attack
 # Protects against DDoS attacks rich in TCP connections
 echo "net.ipv4.tcp_syncookies = 1" >> $sysctlc
-echo "net.ipv4.tcp_max_syn_backlog = 2048" >> $sysctlc
+echo "net.ipv4.tcp_max_syn_backlog = 4096" >> $sysctlc
 echo "net.ipv4.tcp_synack_retries = 3" >> $sysctlc
 
 # mitm route attack 
@@ -277,9 +279,9 @@ echo "net.ipv4.conf.all.accept_source_route = 0" >> $sysctlc
 echo "net.ipv4.conf.default.accept_source_route = 0" >> $sysctlc
 
 # ipv6 disable
-echo #"net.ipv6.conf.all.disable_ipv6 = 1" >> $sysctlc
-echo #"net.ipv6.conf.default.disable_ipv6 = 1" >> $sysctlc
-echo #"net.ipv6.conf.lo.disable_ipv6 = 1" >> $sysctlc
+echo "# net.ipv6.conf.all.disable_ipv6 = 1" >> $sysctlc
+echo "# net.ipv6.conf.default.disable_ipv6 = 1" >> $sysctlc
+echo "# net.ipv6.conf.lo.disable_ipv6 = 1" >> $sysctlc
 #
 #printf "\033[93m Изменения systemctl $vercheck внесены  \033[0m"
 sysctl -p
@@ -307,7 +309,7 @@ net.ipv4.icmp_ignore_bogus_error_responses = 1
 # block SYN-flood Attack
 # Protects against DDoS attacks rich in TCP connections
 net.ipv4.tcp_syncookies = 1
-net.ipv4.tcp_max_syn_backlog = 2048
+net.ipv4.tcp_max_syn_backlog = 4096
 net.ipv4.tcp_synack_retries = 3
 
 # mitm route attack 
@@ -333,7 +335,7 @@ EOF
 /usr/sbin/sysctl --load $sysctl13
 /sbin/sysctl --load $sysctl13
 else
-    printf "\033[91m \nSystemctl was not configured, unknown error\033[0m \n"
+    printf "\033[91m \nSystemctl Не был сконфигурирован\033[0m \n"
 fi
 
 #==================================================--- Простенькая настройка Fail2Ban
@@ -345,11 +347,12 @@ findtime = 300
 maxretry = 3
 bantime = 365d
 EOF
+#------ лучше тут сами
 systemctl restart fail2ban
-
 systemctl stop fail2ban
-
+ufw allow ssh
 ufw disable
+#
 #==================================================----- UFW
 #------------- ufwbefore = /etc/ufw/before.rules
 # игнор эхо запросов. Отключена часть скрипта, потому что не работает полученичение порта SSH, а значит, включение фаерволла заблокирует себя. Можно сделать вручную
@@ -386,6 +389,7 @@ printf "\033[93m  Базовая настройка выполнена \033[0m\n
 #printf "\033[93m Что бы воспользоваться командами VPN - набери x-ui и вооружись переводчиком.\033[0m\n"
 #read -p "Прочитал? Точно? Жми Энтер."
 
-printf "\033[93m Для установки 3x-ui воспользуйся .\033[0m\n"
+printf "\033[93m Для установки 3x-ui Нужно нажать ENTER.\033[0m\n"
+printf "\033[93m также, советую включить fail2ban и ufw.\033[0m\n"
+read -p "ENTER..?"
 bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
-read -p "ENTER........"

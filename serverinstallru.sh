@@ -304,7 +304,7 @@ net.core.default_qdisc=fq
 net.ipv4.tcp_congestion_control=bbr
 
 #ICMP ingore - optional
-net.ipv4.icmp_ignore_bogus_error_responses = 1
+# net.ipv4.icmp_ignore_bogus_error_responses = 1
 
 # block SYN-flood Attack
 # Protects against DDoS attacks rich in TCP connections
@@ -318,10 +318,14 @@ net.ipv4.tcp_synack_retries = 3
 net.ipv4.conf.all.accept_source_route = 0
 net.ipv4.conf.default.accept_source_route = 0
 
-# ipv6 disable
+#------- DO NOTE DISABLE IPV6 HERE
+#
+# ipv6 disable 
 #   net.ipv6.conf.all.disable_ipv6 = 1
 #   net.ipv6.conf.default.disable_ipv6 = 1
 #   net.ipv6.conf.lo.disable_ipv6 = 1
+#
+#------- DO NOTE DISABLE IPV6 HERE
 
 net.ipv4.conf.all.accept_redirects = 0
 net.ipv4.conf.default.accept_redirects = 0
@@ -329,6 +333,18 @@ net.ipv4.conf.all.secure_redirects = 0
 net.ipv4.conf.default.secure_redirects = 0
 net.ipv6.conf.all.accept_redirects = 0
 net.ipv6.conf.default.accept_redirects = 0
+
+# Увеличение лимитов для высоконагруженных серверов
+net.core.somaxconn=65535
+net.core.netdev_max_backlog=65535
+net.ipv4.ip_local_port_range=1024 65535
+
+# Ускорение закрытия соединений
+net.ipv4.tcp_fin_timeout=30
+net.ipv4.tcp_tw_reuse=1
+
+# Защита от Small SYN flood
+net.ipv4.tcp_mtu_probing=1
 EOF
 
 #printf "\033[93m Изменения systemctl $vercheck внесены \033[0m"

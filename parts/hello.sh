@@ -9,11 +9,9 @@
 #
 #"\033[93m\n yellow text -\e[1;37m white text \033[0m\n"
 #
-
 hostname=$(hostname) 
 dspace=$(df -h / | awk 'NR==2{print "📦 " $2 " total | 💾 " $3 " used | 🆓 " $4 " free | 📊 " $5}')
 uptime=$(uptime -p)
-
 # ----------- FIX: корректное получение списка адресов -----------
 # Вместо hostname --all-ip-addresses
 localv4_list=$(ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | grep -v '^127\.')
@@ -32,24 +30,21 @@ clear
 printf "\n\e[1;37m------------------------*|||*------------------------\033[0m\n"
 printf "\n\033[93m [---- Welcome to\e[1;37m > $hostname <\033[93m ----] \033[0m\n"
 echo " "
-
 # Вывод IPv4 (каждый с новой строки)
 printf "\033[93m IPv4:\033[0m\n"
 echo "$localv4_list" | while IFS= read -r ip; do
     printf "   \e[1;37m%s\033[0m\n" "$ip"
 done
-
 # Вывод IPv6 (каждый с новой строки)
 printf "\033[93m IPv6:\033[0m\n"
 echo "$localv6_list" | while IFS= read -r ip; do
     printf "   \e[1;37m%s\033[0m\n" "$ip"
 done
-
 echo " "
 printf "%b" "\033[93m Disk space: \e[1;37m $dspace \033[0m\n"
 printf "\033[93m Uptime: \e[1;37m $uptime \033[0m\n"
 printf "\n\e[1;37m------------------------*...*------------------------\033[0m\n"
-printf "\033[93mto edit: \e[1;37m/etc/profile.d/hello.sh\033[0m\n"
+printf "\033[93mto edit: \e[1;37m/etc/profile.d/hello.sh\033[0m"
 #printf "\033[93m*-=-=-=-=-=-=-=-=-\e[1;37m> UFW STATUS <\033[93m-=-=-=-=-=-=-=-=-* \033[0m\n"
 #printf "%b" "\033[93m ufw: \e[1;37m $ufws \033[0m"
 printf "\n\e[1;37m------------------------*...*------------------------\033[0m\n"

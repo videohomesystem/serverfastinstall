@@ -1,3 +1,3 @@
 #!/bin/bash
-read -p  "Каталог партс"
+read -p  "ENTER....?"
 reboot

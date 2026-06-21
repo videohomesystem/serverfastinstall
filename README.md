@@ -1,5 +1,5 @@
 # Fast server Installation
-# DEBIAN 12 ONLY
+# DEBIAN 12-13 ONLY
 Script created for fast install VPN's Debian based server
 
 Скрипт создан для быстрой настройки сервера на базе 3x-ui.

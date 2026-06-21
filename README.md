@@ -8,7 +8,7 @@ Script created for fast install VPN's Debian based server
 
 Подразумевается, что ты уже арендовал хостинг
 1) Качаем программу для подключения:
-`[https://github.com/mRemoteNG/mRemoteNG/releases/download/v1.76.20/mRemoteNG-Installer-1.76.20.24615.msi](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)`
+`[https://putty.org.ru/download](Путти)`
 
 3) ставим и подключаемся по ssh (гуглим как)
 4) выполняем su - вводим пароль

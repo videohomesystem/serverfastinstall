@@ -98,8 +98,7 @@ net.ipv4.tcp_tw_reuse=1
 net.ipv4.tcp_mtu_probing=1
 EOF
 
-#printf "\033[93m Изменения systemctl $vercheck внесены \033[0m"
-/usr/sbin/sysctl --load $sysctl13
+printf "\033[93m Изменения systemctl $vercheck внесены \033[0m"
 /sbin/sysctl --load $sysctl13
 else
     printf "\033[91m \nSystemctl was not configured, unknown error\033[0m \n"

@@ -36,6 +36,13 @@ vercheck=$(cat /etc/debian_version 2>/dev/null | tr -d ' ' | head -n1)
 #localip=$(hostname --ip-address)                       #-- 
 #appremove=(vim cron) #-- не люблю вим, снимаю с себя погоны айти за это с:
 #echo -e "" >> $var #-- кртл + с
+
+#     [ -f $sshdconf ] || touch $sshdconf
+#        -f	существует ли файл
+#        -d	существует ли каталог
+#        -e	существует ли что угодно (файл, каталог, симлинк)
+#        -s	файл существует и не пустой
+#        -L	существует ли символическая ссылка
 #============================================================================================================================
 if [[ $EUID -ne 0 ]]; then
    printf "\033[93m run script as\e[1;37m root\033[0m\n"
@@ -127,7 +134,8 @@ printf "\033[93m Установка приложений завершена.\033
 #---------------------------------------------- HELLO SHH --- /etc/profile.d/hello.sh
 #============================================================================================================================
    tee $motdd %>/dev/null/
-   touch $hellosh
+   [ -f $hellosh ] || touch $hellosh
+   #touch $hellosh
 #
    cat > $hellosh << 'EOF'
 #!/bin/bash
@@ -194,11 +202,12 @@ chmod +x $hellosh
 #============================================================================================================================
 #======================== ----------------------Автоматизация обновлений
 #-- создаем скрипт, который послужит точкой выполнения автоапдейта по пути: /usr/local/bin/autostart.sh
-touch $autostscr
+[ -f $autostscr ] || touch $autostscr
+#touch $autostscr
 
 #echo -e "sleep 20" >> $autostscr #-- ждем
 #echo -e "reboot" >> $autostscr #-- ребут сервера | НИ В КОЕМ СЛУЧАЕ!!!
-#-
+#- autostscr="/usr/local/bin/autostart.sh" 
 cat > $autostscr << EOF
 #!/bin/bash
 apt update && apt upgrade -y
@@ -208,7 +217,8 @@ EOF
 chmod +x $autostscr #-- выдаем права на выполнение
 #============================================================================================================================
 #-- Создаем службу, которая будет выполнять скрипт выше по пути: /etc/systemd/system/AutoUpdate.service 
-touch $autoservc
+[ -f $autoservc ] || touch $autoservc
+#touch $autoservc
 #-
 cat > $autoservc << EOF
 [Unit]
@@ -227,8 +237,9 @@ EOF
 #-- Создаем таймер, который будет запускать этот сервис раз в неделю, в 12 часов ночи. Путь: /etc/systemd/system/AutoUpdate.timer
 #-- Поясню - Раз в неделю, значит каждый понедельник, независимо от того, когда таймер был запущен. Если вы впервые запустили его в пятницу, значит,
 #-- он в любом случае будет вновь запущен в понедельник.
-touch $autotimer
-#-
+[ -f $autotimer ] || touch $autotimer
+#touch $autotimer
+#- autotimer="/etc/systemd/system/AutoUpdate.timer"  
 cat > $autotimer << EOF
 [Unit]
 Description=AutoUpdateTimer
@@ -355,7 +366,8 @@ else
 fi
 
 #==================================================--- Простенькая настройка Fail2Ban
-touch $failsrc #-- Новый файл
+[ -f $failsrc ] || touch $failsrc #-- Новый файл
+#touch $failsrc 
 cat > $failsrc << EOF
 [DEFAULT]
 [ssh]

@@ -9,6 +9,13 @@
 #
 #"\033[93m\n yellow text -\e[1;37m white text \033[0m\n"
 #
+#------------------------
+# IF SSH = HELLO; ELIF = NON-MESSAGE
+  if [ -z "$SSH_CONNECTION" ] && [ -z "$SSH_TTY" ]; then
+      # IF NONE-SSH == EXIT
+      exit 0
+  fi
+#------------------------
 hostname=$(hostname) 
 dspace=$(df -h / | awk 'NR==2{print "📦 " $2 " total | 💾 " $3 " used | 🆓 " $4 " free | 📊 " $5}')
 uptime=$(uptime -p)

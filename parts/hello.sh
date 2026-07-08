@@ -1,22 +1,20 @@
 #!/bin/bash
-#   1 - Clear /etc/motd                => cat /dev/null > /etc/motd
-#   2 - make the sctirpt /etc/profile.d/hello.sh   => touch /etc/profile.d/hello.sh
-#   3 - Cply ALL to /etc/profile.d/hello.sh
 #
 #        hello SSH logon script
 #        Execute in > /etc/profile.d/hello.sh
 #        Tested: Debian 13, but 100% work ANY Linux distribs
 #
-#"\033[93m\n yellow text -\e[1;37m white text \033[0m\n"
-#
 #------------------------
-# IF SSH = HELLO; ELIF = NON-MESSAGE
+# Проверка: запускаемся только если есть SSH-соединение
   if [ -z "$SSH_CONNECTION" ] && [ -z "$SSH_TTY" ]; then
-      # IF NONE-SSH == EXIT
+      # Если переменные SSH не установлены - выходим без вывода
       exit 0
   fi
 #------------------------
-hostname=$(hostname) 
+C_YELLOW="\033[93m"
+C_WHITE="\e[1;37m"
+C_RESET="\033[0m"
+#------------------------
 dspace=$(df -h / | awk 'NR==2{print "📦 " $2 " total | 💾 " $3 " used | 🆓 " $4 " free | 📊 " $5}')
 uptime=$(uptime -p)
 # ----------------------
@@ -29,29 +27,28 @@ if [ -z "$localv6_list" ]; then localv6_list="N\A"; fi
 if [ -z "$localv4_list" ]; then localv4_list="N\A"; fi
 if [ -z "$localv6_list" ]; then localv6_list="N\A"; fi
 # ----------------------------------------------------------------
-#ufws=$(ufw status verbose)
-#fail2=$(fail2ban-client status | grep 'banned')
+# ufws=$(ufw status verbose)
+# fail2=$(fail2ban-client status | grep 'banned')
 # ----------------------------------------------------------------
 clear
 #-
-printf "\n\e[1;37m------------------------*|||*------------------------\033[0m\n"
-printf "\n\033[93m [---- Welcome to\e[1;37m > $hostname <\033[93m ----] \033[0m\n"
-echo " "
-# IPv4
-printf "\033[93m IPv4:\033[0m\n"
+  printf "\n${C_WHITE}------------------------*||*------------------------${C_RESET}\n"
+  printf "\n${C_YELLOW}[---- Welcome to ${C_WHITE}> $HOSTNAME < ${C_YELLOW}----]${C_RESET}\n"
+  echo " "
+  # IPv4
+printf "${C_YELLOW} IPv4:${C_RESET}\n"
 echo "$localv4_list" | while IFS= read -r ip; do
-    printf "   \e[1;37m%s\033[0m\n" "$ip"
+printf "   ${C_WHITE}%s${C_RESET}\n" "$ip"
 done
-# IPv6
-printf "\033[93m IPv6:\033[0m\n"
+  # IPv6
+printf "${C_YELLOW} IPv6:${C_RESET}\n"
 echo "$localv6_list" | while IFS= read -r ip; do
-    printf "   \e[1;37m%s\033[0m\n" "$ip"
+ printf "   ${C_WHITE}%s${C_RESET}\n" "$ip"
 done
-echo " "
-printf "%b" "\033[93m Disk space: \e[1;37m $dspace \033[0m\n"
-printf "\033[93m Uptime: \e[1;37m $uptime \033[0m\n"
-printf "\n\e[1;37m------------------------*...*------------------------\033[0m\n"
-printf "\033[93mto edit: \e[1;37m/etc/profile.d/hello.sh\033[0m"
-#printf "\033[93m*-=-=-=-=-=-=-=-=-\e[1;37m> UFW STATUS <\033[93m-=-=-=-=-=-=-=-=-* \033[0m\n"
-#printf "%b" "\033[93m ufw: \e[1;37m $ufws \033[0m"
-printf "\n\e[1;37m------------------------*...*------------------------\033[0m\n"
+printf "%b" "${C_YELLOW} Disk space: ${C_WHITE} $dspace ${C_RESET}\n"
+printf "${C_YELLOW} Uptime: ${C_WHITE} $uptime ${C_RESET}\n"
+  # printf "\n${C_WHITE}------------------------*...*------------------------${C_RESET}\n"
+  # printf "${C_YELLOW}to edit: ${C_WHITE}/etc/profile.d/hello.sh${C_RESET}"
+  # printf "${C_YELLOW}*-=-=-=-=-=-=-=-=-${C_WHITE}> INFO <${C_YELLOW}-=-=-=-=-=-=-=-=-* ${C_RESET}\n"
+printf "\n${C_WHITE} try ${C_YELLOW} last ${C_WHITE} to display all ssh sessions and ${C_YELLOW} grep | 'USERNAME' ${C_RESET}\n"
+printf "\n${C_WHITE}------------------------*...*------------------------${C_RESET}\n"

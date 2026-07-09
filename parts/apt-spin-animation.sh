@@ -1,12 +1,14 @@
 #!/bin/bash
 #
 #
-#
-#
+C_RED="\033[91m"
+C_YELLOW="\033[93m"
+C_WHITE="\e[1;37m"
+C_RESET="\033[0m"
 #
 run_with_spinner() {
     local cmd="$1"
-    local message="${2:-Выполнение команды}"
+    local message="${2:-Command run}"
     local spin='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
     local i=0
     
@@ -29,8 +31,8 @@ run_with_spinner() {
         return 1
     fi
 }
-printf "\n\033[93m Запускается обновление системы, это займет какое-то время \033[0m\n"
-run_with_spinner "apt update -qq" "Обновление списков пакетов"
+printf "${C_WHITE} System update is running ${C_RESET}\n"
+run_with_spinner "apt update -qq" "Update packages"
 
-run_with_spinner "apt upgrade -y -qq" "Обновление системы"
-printf "\n\033[93m Система обновлена \033[0m\n"
+run_with_spinner "apt-get dist-upgrade -y" "The system update start..."
+printf "${C_WHITE} The system has been updated. ${C_RESET}\n"

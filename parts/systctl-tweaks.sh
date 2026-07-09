@@ -86,19 +86,19 @@ net.ipv6.conf.all.accept_redirects = 0
 net.ipv6.conf.default.accept_redirects = 0
 
 # Увеличение лимитов для высоконагруженных серверов
-net.core.somaxconn=65535
-net.core.netdev_max_backlog=65535
-net.ipv4.ip_local_port_range=1024 65535
+net.core.somaxconn = 65535
+net.core.netdev_max_backlog = 65535
+net.ipv4.ip_local_port_range = 1024 65535
 
 # Ускорение закрытия соединений
-net.ipv4.tcp_fin_timeout=30
-net.ipv4.tcp_tw_reuse=1
+net.ipv4.tcp_fin_timeout = 30
+net.ipv4.tcp_tw_reuse = 1
 
 # Защита от Small SYN flood
-net.ipv4.tcp_mtu_probing=1
+net.ipv4.tcp_mtu_probing = 1
 EOF
 
-printf "\033[93m Изменения systemctl $vercheck внесены \033[0m"
+printf "\033[93m The systemctl $vercheck up ready. \033[0m"
 /sbin/sysctl --load $sysctl13
 else
     printf "\033[91m \nSystemctl was not configured, unknown error\033[0m \n"

@@ -5,9 +5,9 @@
 #        Tested: Debian 13, but 100% work ANY Linux distribs
 #
 #------------------------
-# Проверка: запускаемся только если есть SSH-соединение
+# Check SSH connection
   if [ -z "$SSH_CONNECTION" ] && [ -z "$SSH_TTY" ]; then
-      # Если переменные SSH не установлены - выходим без вывода
+      # If ssh FALSE => exit
       exit 0
   fi
 #------------------------

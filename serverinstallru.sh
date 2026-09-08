@@ -15,8 +15,6 @@ fi
 # - вносим очень важный твик ядра, который --ЗНАЧИТЕЛЬНО-- увеличит производительность сетевой составляющей сервера, это особенно заметно, если подключений будет >> несколько
 # - чистим старые пакеты
 # - ставим 3x-ui и отдаем управление этому скрипту
-# - ОБЯЗАТЕЛЬНО ребутаемся
-#-- Я ОЧЕНЬ РЕКОМЕНДУЮ! Обновить файл Hosts под свои адреса и задачи
 #
 # https://wiki.archlinux.org/title/Sysctl_(%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9)
 #============================================================================================================================
@@ -24,7 +22,7 @@ src12="/etc/apt/sources.list"                           #-- переменная
 src13="/etc/apt/sources.list.d/50-off-deb.sources"      #-- Сорцы дебиана
 sysctlc12="/etc/sysctl.conf"                            #-- переменная сисцтл, куда внесем изменения для твика ядра
 sysctl13="/usr/lib/sysctl.d/50-custom.conf"             #-- DEBIAN 13 - переменная сисцтл, куда внесем изменения для твика ядра
-appinst=(fail2ban mcedit curl ufw apt-transport-https ca-certificates) #-- переменная цикла -- Тут пишем аппсы, БЕЗ запятых, ТОЛЬКО с пробелами и они будут установлены
+appinst=(fail2ban mcedit curl ufw apt-transport-https ca-certificates netcat-openbsd) #-- переменная цикла -- Тут пишем аппсы, БЕЗ запятых, ТОЛЬКО с пробелами и они будут установлены
 hellosh="/etc/profile.d/hello.sh"                       #-- Приветственный скрипт SSH
 motdd="/etc/motd"                                       #-- Это надо очистить
 #---------------------------------------
@@ -153,7 +151,6 @@ run_with_spinner() {
 }
 run_with_spinner "apt update -qq" "Обновление списков пакетов"
 
-
 run_with_spinner "apt upgrade -y -qq" "Обновление системы"
 printf "${C_WHITE}Система обновлена.${C_RESET}\n"
 # -------------------------- APPS INST
@@ -166,7 +163,15 @@ done
 printf "${C_WHITE} Установка приложений завершена${C_RESET}\n"
 #============================================================================================================================
 update-alternatives --set editor /usr/bin/mcedit
-printf "${C_WHITE} Редактор текста по умолчанию установлен:${C_YELLOW} mcedit${C_RESET}\n"
+printf "${C_WHITE}Текстовый редактор по умолчанию установлен:${C_YELLOW}mcedit${C_RESET}\n"
+
+#---------------------- Not testet:
+#if command -v mcedit &> /dev/null; then
+#    update-alternatives --set editor /usr/bin/mcedit
+#    printf "${C_WHITE}Текстовый редактор по умолчанию установлен:${C_YELLOW}mcedit${C_RESET}\n"
+#else
+#    printf "${C_RED}Ошибка: mcedit не установлен!${C_RESET}\n"
+#fi
 #============================================================================================================================
 #---------------------------------------------- HELLO SHH --- /etc/profile.d/hello.sh
 #============================================================================================================================
@@ -183,10 +188,16 @@ tee $hellosh &>/dev/null << 'EOF'
 #
 #------------------------ BE CAREFUL TO THIS MOMENT ---------
 # Проверка: запускаемся только если есть SSH-соединение
+# Check the SSH; Display hello.ssh ONLY when you use localhost or network ssh
 #  if [ -z "$SSH_CONNECTION" ] && [ -z "$SSH_TTY" ]; then
 #      # Если переменные SSH не установлены - выходим без вывода
 #      exit 0
 #  fi
+#
+# In somes linux-distrib's, this script can be broke sudo and Plasma-GUI
+# If you broke yours GUI, try sudo mcedit\nano, and edit this file:
+# sudo mcedit /etc/profile.d/hello.sh
+# delete or use #
 #------------------------ BE CAREFUL TO THIS MOMENT ^^^------
 C_YELLOW="\033[93m"
 C_WHITE="\e[1;37m"
@@ -198,7 +209,7 @@ uptime=$(uptime -p)
 # do not use: hostname --all-ip-addresses
 localv4_list=$(ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | grep -v '^127\.')
 localv6_list=$(ip -6 addr show | grep -oP '(?<=inet6\s)[0-9a-fA-F:]+' | grep -v '^::1' | grep -v '^fe80:')
-if [ -z "$localv6_list" ]; then localv6_list="N\A"; fi
+# if [ -z "$localv6_list" ]; then localv6_list="N\A"; fi
 # ----------------------------------------------------------------
 # if adress NULL = N/A
 if [ -z "$localv4_list" ]; then localv4_list="N\A"; fi
@@ -210,24 +221,24 @@ if [ -z "$localv6_list" ]; then localv6_list="N\A"; fi
 clear
 #-
   printf "\n${C_WHITE}------------------------*||*------------------------${C_RESET}\n"
-  printf "\n${C_YELLOW}[---- Welcome to ${C_WHITE}> $HOSTNAME < ${C_YELLOW}----]${C_RESET}\n"
+  printf "\n${C_YELLOW}[---- Welcome to ${C_WHITE}> $HOSTNAME <${C_YELLOW}----]${C_RESET}\n"
   echo " "
   # IPv4
-printf "${C_YELLOW} IPv4:${C_RESET}\n"
+printf "${C_YELLOW}IPv4:${C_RESET}\n"
 echo "$localv4_list" | while IFS= read -r ip; do
-printf "   ${C_WHITE}%s${C_RESET}\n" "$ip"
+printf "${C_WHITE}%s${C_RESET}\n" "$ip"
 done
   # IPv6
 printf "${C_YELLOW} IPv6:${C_RESET}\n"
 echo "$localv6_list" | while IFS= read -r ip; do
- printf "   ${C_WHITE}%s${C_RESET}\n" "$ip"
+printf "${C_WHITE}%s${C_RESET}\n" "$ip"
 done
-printf "%b" "${C_YELLOW} Disk space: ${C_WHITE} $dspace ${C_RESET}\n"
-printf "${C_YELLOW} Uptime: ${C_WHITE} $uptime ${C_RESET}\n"
+printf "%b" "${C_YELLOW}Disk space:${C_WHITE} ${dspace}${C_RESET}\n"
+printf "${C_YELLOW} Uptime:${C_WHITE} ${uptime}${C_RESET}\n"
   # printf "\n${C_WHITE}------------------------*...*------------------------${C_RESET}\n"
-  # printf "${C_YELLOW}to edit: ${C_WHITE}/etc/profile.d/hello.sh${C_RESET}"
+  # printf "${C_YELLOW}to edit:${C_WHITE}/etc/profile.d/hello.sh${C_RESET}"
   # printf "${C_YELLOW}*-=-=-=-=-=-=-=-=-${C_WHITE}> INFO <${C_YELLOW}-=-=-=-=-=-=-=-=-* ${C_RESET}\n"
-printf "\n${C_WHITE} try ${C_YELLOW} last ${C_WHITE} to display all ssh sessions and ${C_YELLOW} grep | 'USERNAME' ${C_RESET}\n"
+printf "\n${C_WHITE} try${C_YELLOW} last${C_WHITE} to display all ssh sessions and${C_YELLOW} grep | 'USERNAME' ${C_RESET}\n"
 printf "\n${C_WHITE}------------------------*...*------------------------${C_RESET}\n"
 EOF
 chmod +x $hellosh

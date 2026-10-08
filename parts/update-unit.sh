@@ -11,12 +11,23 @@ C_YELLOW="\033[93m"
 C_WHITE="\e[1;37m"
 C_RESET="\033[0m"
 
+#---------------------------------------
+# autostscr="/usr/local/bin/autostart.sh"
+[ -f $autostscr ] || touch $autostscr | printf "${C_WHITE} Создаем файл: ${C_YELLOW}$autostscr${C_RESET}\n"
+
+# autoservc="/etc/systemd/system/AutoUpdate.service"
+[ -f $autoservc ] || touch $autoservc | printf "${C_WHITE} Создаем файл: ${C_YELLOW}$autoservc${C_RESET}\n"
+
+# autotimer="/etc/systemd/system/AutoUpdate.timer"
+[ -f $autotimer ] || touch $autotimer | printf "${C_WHITE} Создаем файл: ${C_YELLOW}$autotimer${C_RESET}\n"
+
+#============================================================================================================================
 #======================== ----------------------Автоматизация обновлений
 # Поскольку абсолютно очевиден факт - обычный юзер не будет раз в неделю (и даже раз в год) обновлять систему - автоматизируем
 # совсем без обновлений жить нельзя
 #- создаем скрипт, который послужит точкой выполнения автоапдейта по пути: /usr/local/bin/autostart.sh
 #- autostscr="/usr/local/bin/autostart.sh"
-
+printf "${C_WHITE}Создание скрипты для автоапдейта${C_RESET}\n"
 tee $autostscr &>/dev/null << EOF
 #!/bin/bash
 apt update && apt upgrade -y
@@ -27,6 +38,7 @@ chmod +x $autostscr #-- выдаем права на выполнение
 #============================================================================================================================
 #-- Создаем службу, которая будет выполнять скрипт выше по пути: /etc/systemd/system/AutoUpdate.service 
 #-
+printf "${C_WHITE}Создание юнита-службы${C_RESET}\n"
 #cat > $autoservc << EOF
 tee $autoservc &>/dev/null << EOF
 [Unit]
@@ -49,6 +61,7 @@ EOF
 #touch $autotimer
 #- autotimer="/etc/systemd/system/AutoUpdate.timer"  
 #cat > $autotimer << EOF
+printf "${C_WHITE}Создание юнита-таймера${C_RESET}\n"
 tee $autotimer &>/dev/null << EOF
 [Unit]
 Description=AutoUpdateTimer
@@ -68,3 +81,4 @@ systemctl daemon-reload
 systemctl enable AutoUpdate.service
 systemctl enable AutoUpdate.timer
 #-
+printf "${C_WHITE}Готово.${C_RESET}\n"

@@ -22,7 +22,7 @@ src12="/etc/apt/sources.list"                           #-- переменная
 src13="/etc/apt/sources.list.d/50-off-deb.sources"      #-- Сорцы дебиана
 sysctlc12="/etc/sysctl.conf"                            #-- переменная сисцтл, куда внесем изменения для твика ядра
 sysctl13="/usr/lib/sysctl.d/50-custom.conf"             #-- DEBIAN 13 - переменная сисцтл, куда внесем изменения для твика ядра
-appinst=(fail2ban mcedit curl ufw apt-transport-https ca-certificates netcat-openbsd) #-- переменная цикла -- Тут пишем аппсы, БЕЗ запятых, ТОЛЬКО с пробелами и они будут установлены
+appinst=(mcedit curl ufw apt-transport-https ca-certificates netcat-openbsd) #-- переменная цикла -- Тут пишем аппсы, БЕЗ запятых, ТОЛЬКО с пробелами и они будут установлены
 hellosh="/etc/profile.d/hello.sh"                       #-- Приветственный скрипт SSH
 motdd="/etc/motd"                                       #-- Это надо очистить
 #---------------------------------------
@@ -50,7 +50,6 @@ C_RED="\033[91m"
 C_YELLOW="\033[93m"
 C_WHITE="\e[1;37m"
 C_RESET="\033[0m"
-#
 #       ${C_RED}
 #       ${C_YELLOW}
 #       ${C_WHITE}
@@ -98,7 +97,7 @@ EOF
 elif [[ "$vercheck" == 13.* ]]; then
  #cat /dev/null > /etc/apt/sources.list
     # src13="/etc/apt/sources.list.d/50-off-deb.sources"
-[ -f $src13 ] || touch $src13 | printf "${C_WHITE} Создаем файл: ${C_YELLOW}- $src13 ${C_RESET}\n"
+[ -f $src13 ] || touch $src13 | printf "${C_WHITE}Создаем файл: ${C_YELLOW}- $src13 ${C_RESET}\n"
 
 cat > $src13 << EOF
 Types: deb
@@ -122,7 +121,7 @@ else
 fi
 
 #============================================================================================================================
-printf "${C_WHITE} Запускается обновление системы... ${C_RESET}\n"
+printf "${C_WHITE}Запускается обновление системы...${C_RESET}\n"
 
 run_with_spinner() {
     local cmd="$1"
@@ -426,10 +425,10 @@ maxretry = 3
 bantime = 365d
 EOF
 #------ лучше тут сами
-systemctl restart fail2ban
-systemctl stop fail2ban
+#systemctl restart fail2ban
+#systemctl stop fail2ban
 ufw allow ssh
-ufw disable
+#ufw disable
 #
 #==================================================----- UFW
 #------------- ufwbefore = /etc/ufw/before.rules
@@ -454,10 +453,10 @@ ufw disable
 #echo -e "ntpd: ALL" >> $hdeny
 #echo -e "syslog: ALL" >> $hdeny
 #============================================================================================================================
-printf "${C_WHITE} Запуск очистки системы от старых пакетов... ${C_RESET}\n"
+printf "${C_WHITE}Запуск очистки системы от старых пакетов...${C_RESET}\n"
 apt autoremove -y #--- чистим старые пакеты автоудалятором
 #============================================================================================================================
-printf "${C_WHITE}  Базовая настройка выполнена ${C_RESET}\n"
+printf "${C_WHITE}Базовая настройка выполнена${C_RESET}\n"
 #============================================================================================================================
 #printf "${C_WHITE} А теперь внимательно - сейчас управление будет передано 3x-ui.${C_RESET}\n"
 #printf "${C_WHITE} ОЧЕНЬ внимательно читаем, че там будет написано. ${C_RESET}\n"
@@ -467,6 +466,6 @@ printf "${C_WHITE}  Базовая настройка выполнена ${C_RES
 #read -p "Прочитал? Точно? Жми Энтер."
 
 printf "${C_WHITE}Для установки 3x-ui нажмите ${C_YELLOW}ENTER ${C_WHITE}или ${C_YELLOW}CTRL+C${C_WHITE} для отмены${C_RESET}\n"
-printf "${C_WHITE} также, советую включить fail2ban и ufw.${C_RESET}\n"
+#printf "${C_WHITE}также, советую включить fail2ban и ufw.${C_RESET}\n"
 read -p "ENTER..?"
 bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
